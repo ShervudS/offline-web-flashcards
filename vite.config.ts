@@ -1,7 +1,7 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 
-// https://vite.dev/config/
+/** @type {import('vite').UserConfig} */
 export default defineConfig({
   plugins: [react()],
 
@@ -29,24 +29,15 @@ export default defineConfig({
           @use \"_styles/functions/_functions-utils.scss\" as *;`,
       },
     },
+    modules: {
+      generateScopedName: "[hash:base36:5]",
+    },
   },
 
   build: {
     rollupOptions: {
       output: {
-        /**
-         * Использование более короткого словаря символов
-         * - "base-64" - "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_"
-         * - "base36" - "abcdefghijklmnopqrstuvwxyz0123456789"
-         * https://rollupjs.org/configuration-options/#output-hashcharacters
-         */
         hashCharacters: "base36",
-        /**
-         * Изменение имени файлов после билдна, на хэши
-         * - chunkFileNames: чанки
-         * - entryFileNames: входные js файлы
-         * - assetFileNames: ассетов (CSS, изображения и т.д.)
-         */
         chunkFileNames: "assets/[hash].js",
         entryFileNames: "assets/[hash].js",
         assetFileNames: "assets/[hash][extname]",

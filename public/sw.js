@@ -27,8 +27,8 @@ const trimCache = (cacheName, maxItems) => {
 addEventListener("install", (installEvent) => {
   installEvent.waitUntil(
     caches.open(staticCacheName).then((staticCache) => {
-    //   staticCache.addAll(["/path/to/font.woff", "/path/to/icon.svg"]);
-      return staticCache.addAll(["*.css", "*.js", "/"]);
+      //   staticCache.addAll(["/path/to/font.woff", "/path/to/icon.svg"]);
+      staticCache.addAll(["/index.html"]);
     })
   );
 });
@@ -52,9 +52,11 @@ addEventListener("activate", (activateEvent) => {
 
 addEventListener("fetch", (fetchEvent) => {
   const request = fetchEvent.request;
+  const requestUrl = new URL(fetchEvent.request.url);
+
   if (request.headers.get("Accept").includes("text/html")) {
     fetchEvent.respondWith(
-      fetch(request).catch(() => caches.match("/index.html")) // end fetch catch
+      fetch(request).catch(() => caches.match("/index.html"))
     );
     return;
   }
@@ -74,6 +76,28 @@ addEventListener("fetch", (fetchEvent) => {
               .then((pagesCache) => pagesCache.put(request, copy))
           );
           return responseFromFetch;
+        });
+      })
+    );
+    return;
+  }
+
+  if (
+    (requestUrl.pathname.endsWith(".js") ||
+      requestUrl.pathname.endsWith(".css")) &&
+    !request.url.startsWith("chrome-extension")
+  ) {
+    fetchEvent.respondWith(
+      caches.open(staticCacheName).then((cache) => {
+        return cache.match(fetchEvent.request).then((response) => {
+          if (response) {
+            return response;
+          }
+
+          return fetch(fetchEvent.request).then((networkResponse) => {
+            cache.put(fetchEvent.request, networkResponse.clone());
+            return networkResponse;
+          });
         });
       })
     );

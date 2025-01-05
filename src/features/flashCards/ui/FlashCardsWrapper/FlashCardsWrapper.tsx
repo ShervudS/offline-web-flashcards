@@ -15,6 +15,7 @@ export const FlashCardsWrapper = () => {
   const cardsDb = new CardsIndexedDB("flashCards", "cards");
 
   const [cards, setCards] = useState<TFlashCard[] | null>(null);
+  const [isStartLearning, setIsStartLearning] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
@@ -70,11 +71,21 @@ export const FlashCardsWrapper = () => {
           Вернуться
         </Button>
 
-        <Button onClick={resetCurIndex}>Сбросить</Button>
+        <Button onClick={resetCurIndex} disabled={!currentIndex}>
+          Сбросить
+        </Button>
       </div>
 
       <div className={styles.learnCardContainer}>
-        {cards?.[currentIndex] && (
+        {!isStartLearning && (
+          <div>
+            <Button onClick={() => setIsStartLearning(true)}>
+              Начать изучать
+            </Button>
+          </div>
+        )}
+
+        {isStartLearning && cards?.[currentIndex] && (
           <FlashCard
             card={cards[currentIndex]}
             onCorrect={handleCorrect}

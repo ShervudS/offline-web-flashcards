@@ -1,16 +1,16 @@
 {
-	"name": "Vite PWA",
-	"short_name": "Vite PWA",
-	"start_url": "/",
-	"display": "standalone",
-	"background_color": "#ffffff",
-	"theme_color": "#4a90e2",
-	"description": "This is a native PWA built with Vite",
-	"icons": [
-		{
-			"src": "/192.png",
-			"sizes": "192x192",
-			"type": "image/png"
-		}
-	]
+  "name": "Offline web flashcards",
+  "short_name": "Flashcards",
+  "start_url": "/",
+  "display": "fullscreen",
+  "background_color": "#ffffff",
+  "theme_color": "#1e1e1e",
+  "description": "This is a PWA app with support ofline work, cache api and indexDB api",
+  "icons": [
+    {
+      "src": "/192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ]
 }

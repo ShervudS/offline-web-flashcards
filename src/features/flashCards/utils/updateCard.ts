@@ -1,21 +1,21 @@
 import { TFlashCard } from "../types";
 
+const MAX_TIME_TO_CORRECT = 10;
+const MILLSEC_IN_DAY = 24 * 60 * 60 * 1000;
+
 type TUpdateCardLearningStatus = {
   card: TFlashCard;
   responseTime: number;
   isCorrect: boolean;
 };
-
-const MAX_TIME_TO_CORRECT = 10;
-const MILSEC_IN_DAY = 24 * 60 * 60 * 1000;
-
+/**
+ * ref: https://en.wikipedia.org/wiki/SuperMemo#Algorithms
+ */
 export const updateCardLearningStatus = ({
   card,
   responseTime,
   isCorrect,
 }: TUpdateCardLearningStatus) => {
-  console.log("updateCardLearningStatus >>", card, responseTime, isCorrect);
-
   // Рассчитываем качество ответа
   const recallQuality = isCorrect
     ? Math.max(0, 5 - (responseTime / MAX_TIME_TO_CORRECT) * 5)
@@ -44,7 +44,7 @@ export const updateCardLearningStatus = ({
   }
 
   // Обновляем дату следующего повторения
-  card.nextReview = Date.now() + card.interval * MILSEC_IN_DAY;
+  card.nextReview = Date.now() + card.interval * MILLSEC_IN_DAY;
   card.ef = newEf;
 
   return card;
