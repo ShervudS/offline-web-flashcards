@@ -1,0 +1,78 @@
+.control__label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.control__labelText {
+  @include font-label;
+}
+
+.control__inputWrapper {
+  display: flex;
+  gap: $base-spacing;
+  padding: 0.2rem 0.8rem;
+  border: 1px solid $input-color-border;
+  border-radius: 0.6rem;
+  cursor: text;
+
+  @include transit(
+    $common-trans-time,
+    $common-trans-func,
+    border-color,
+    box-shadow
+  );
+
+  &:focus-within {
+    box-shadow: 0 0 0.2em 0.1em $input-shadow-color-focus;
+    border-color: $input-color-border-focus;
+  }
+}
+
+.control__error {
+  border-color: $input-color-border-error;
+
+  &:focus-within {
+    box-shadow: 0 0 0.2em 0.1em $input-shadow-color-error;
+    border-color: $input-color-border-error;
+  }
+
+  & + .control__inputHintText {
+    color: $input-font-color-hint-text-error;
+  }
+}
+
+.control__disabled {
+  border-color: $input-color-border-disabled;
+  background-color: $input-bg-color-disabled;
+  cursor: not-allowed;
+
+  & + .control__inputHintText {
+    color: $input-font-color-hint-text-disabled;
+  }
+}
+
+.control__input {
+  cursor: text;
+  border: none;
+  outline: none;
+  color: inherit;
+  width: 100%;
+  height: 2.4rem;
+  background-color: $input-bg-color;
+
+  &::placeholder {
+    color: $input-font-color-placeholder;
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    background-color: $input-bg-color-disabled;
+    color: $input-font-color-disabled;
+  }
+}
+
+.control__inputHintText {
+  @include font-hint;
+  color: $input-font-color-hint-text;
+}

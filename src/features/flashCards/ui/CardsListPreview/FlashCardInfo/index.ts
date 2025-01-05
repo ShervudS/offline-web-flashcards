@@ -1,0 +1,1 @@
+export { FlashCardInfo } from "./FlashCardInfo";

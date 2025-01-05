@@ -1,0 +1,16 @@
+{
+	"name": "Vite PWA",
+	"short_name": "Vite PWA",
+	"start_url": "/",
+	"display": "standalone",
+	"background_color": "#ffffff",
+	"theme_color": "#4a90e2",
+	"description": "This is a native PWA built with Vite",
+	"icons": [
+		{
+			"src": "/192.png",
+			"sizes": "192x192",
+			"type": "image/png"
+		}
+	]
+}

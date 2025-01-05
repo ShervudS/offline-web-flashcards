@@ -1,0 +1,134 @@
+@use "sass:map";
+
+// === Maps
+$transition-time-func: (
+  "ease": ease,
+  "easeIn": ease-in,
+  "easeOut": ease-out,
+  "easeInOut": ease-in-out,
+);
+
+// === Button ====
+// Default
+$btn-bg-color: var(--primary-text-light);
+$btn-bg-color-hover: var(--primary-text-light);
+$btn-bg-color-focus: var(--primary-text-light);
+$btn-bg-color-disabled: var(--primary-text-dark);
+$btn-font-color: var(--main-text-color);
+$btn-font-color-hover: var(--hover-color);
+$btn-font-color-disabled: var(--primary-text-dark);
+$btn-border-color: var(--primary-text-light);
+$btn-border-color-hover: var(--primary-text-light);
+$btn-border-color-focus: var(--primary-text-light);
+$btn-border-color-disabled: var(--primary-text-dark);
+// Primary (accent)
+$btn-primary-color-bg: "";
+$btn-primary-color-bg-hover: "";
+$btn-primary-color-bg-focus: "";
+$btn-primary-color-bg-disabled: "";
+$btn-primary-color-font: "";
+$btn-primary-color-font-hover: "";
+$btn-primary-color-font-disabled: "";
+$btn-primary-color-border: "";
+$btn-primary-color-border-hover: "";
+$btn-primary-color-border-focus: "";
+$btn-primary-color-border-disabled: "";
+// Transparent (without background and border)
+$btn-transp-color-bg: "";
+$btn-transp-color-bg-hover: "";
+$btn-transp-color-bg-focus: "";
+$btn-transp-color-bg-disabled: "";
+$btn-transp-color-font: "";
+$btn-transp-color-font-hover: "";
+$btn-transp-color-font-disabled: "";
+$btn-transp-color-border: "";
+$btn-transp-color-border-hover: "";
+$btn-transp-color-border-focus: "";
+$btn-transp-color-border-disabled: "";
+
+// ==== Input ===
+$input-shadow-color-focus: var(--focus-color);
+$input-shadow-color-error: var(--error-color);
+
+$input-bg-color: "";
+$input-bg-color-hover: "";
+$input-bg-color-focus: "";
+$input-bg-color-disabled: var(--secondary-text-dark);
+
+$input-font-color: "";
+$input-font-color-placeholder: "";
+$input-font-color-hover: "";
+$input-font-color-disabled: var(--primary--text-color);
+$input-font-color-error: "";
+
+$input-color-border: var(--primary-text-light);
+$input-color-border-hover: "";
+$input-color-border-focus: var(--focus-color);
+$input-color-border-disabled: var(--primary--text-color);
+$input-color-border-error: var(--error-color);
+
+$input-font-color-hint-text: "";
+$input-font-color-hint-text-error: var(--error-color);
+$input-font-color-hint-text-disabled: var(--primary--text-color);
+
+// === Switch ====
+$switch-color-font: "";
+$switch-color-font-disabled: "";
+$switch-color-font-error: "";
+$switch-track-bg-color: "";
+$switch-track-bg-color-disabled: "";
+$switch-thumb-bg-color: "";
+$switch-thumb-bg-color-disabled: "";
+$switch-thumb-bg-color-focus: "";
+$switch-active-track-bg-color: "";
+$switch-passive-track-bg-color: "";
+
+// === Radio ===
+$radio-bg-color: "";
+$radio-bg-color-hover: "";
+$radio-bg-color-focus: "";
+$radio-bg-color-checked: "";
+$radio-bg-color-disabled: "";
+$radio-dot-bg-color: "";
+
+// === Modal 
+$modal-bg-color: '';
+
+// === Colors
+$white-400: #fbfbfb;
+$white-500: #eee;
+$black: #222222;
+$grey-300: #828282;
+$grey-400: #4e4e4e;
+$grey-500: #3f3f3f;
+$grey-600: #383838;
+$grey-700: #2c2c2c;
+$orange-500: #ff5c00;
+$orange-800: #c14600;
+
+
+
+// === Spacing
+$base-spacing: 0.8rem;
+
+$desktop-gap: 2.2rem;
+$tablet-gap: 1.6rem;
+$mobile-gap: 0.8rem;
+
+$desktop-padding: 2.2rem;
+$tablet-padding: 1.6rem;
+$mobile-padding: 0.8rem;
+
+$border-size: $base-spacing;
+
+// === Z-index
+$z-header: 20;
+$z-popup: 50;
+$z-modal: 100;
+
+// === Fonts
+$common-font: Inter, sans-serif;
+
+// === Other
+$common-trans-func: map.get($transition-time-func, "easeOut");
+$common-trans-time: 0.2s;

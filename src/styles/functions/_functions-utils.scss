@@ -1,0 +1,18 @@
+@use "../_variables.scss" as *;
+
+@function spacing($quotient) {
+  @return $quotient * $base-spacing
+}
+
+// Ф-ция для осветвления цвета
+@function lighter($color, $tone) {
+  $adjust: 16 * $tone;
+  @return adjust-color($color, $red: $adjust, $green: $adjust, $blue: $adjust);
+}
+
+// Ф-ция для затемнения цвета
+@function darker($color, $tone) {
+  $adjust: -16 * $tone;
+  @return adjust-color($color, $red: $adjust, $green: $adjust, $blue: $adjust);
+}
+
