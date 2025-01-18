@@ -9,48 +9,60 @@ $transition-time-func: (
 );
 
 // === Button ====
-// Default
-$btn-bg-color: var(--primary-text-light);
-$btn-bg-color-hover: var(--primary-text-light);
-$btn-bg-color-focus: var(--primary-text-light);
-$btn-bg-color-disabled: var(--primary-text-dark);
-$btn-font-color: var(--main-text-color);
-$btn-font-color-hover: var(--hover-color);
-$btn-font-color-disabled: var(--primary-text-dark);
-$btn-border-color: var(--primary-text-light);
-$btn-border-color-hover: var(--primary-text-light);
-$btn-border-color-focus: var(--primary-text-light);
-$btn-border-color-disabled: var(--primary-text-dark);
-// Primary (accent)
-$btn-primary-color-bg: "";
-$btn-primary-color-bg-hover: "";
-$btn-primary-color-bg-focus: "";
-$btn-primary-color-bg-disabled: "";
-$btn-primary-color-font: "";
-$btn-primary-color-font-hover: "";
-$btn-primary-color-font-disabled: "";
-$btn-primary-color-border: "";
-$btn-primary-color-border-hover: "";
-$btn-primary-color-border-focus: "";
-$btn-primary-color-border-disabled: "";
-// Transparent (without background and border)
-$btn-transp-color-bg: "";
-$btn-transp-color-bg-hover: "";
-$btn-transp-color-bg-focus: "";
-$btn-transp-color-bg-disabled: "";
-$btn-transp-color-font: "";
-$btn-transp-color-font-hover: "";
-$btn-transp-color-font-disabled: "";
-$btn-transp-color-border: "";
-$btn-transp-color-border-hover: "";
-$btn-transp-color-border-focus: "";
-$btn-transp-color-border-disabled: "";
+// Primary
+$btn-primary-color-bg: var(--primary-color);
+$btn-primary-color-border: var(--primary-color);
+$btn-primary-color-font: var(--main-color);
+
+$btn-primary-color-bg-hover: var(--grey-color);
+$btn-primary-color-font-hover: var(--second-color);
+$btn-primary-color-border-hover: var(--grey-color);
+
+$btn-primary-color-bg-focus: var(--primary-text-light);
+$btn-primary-color-border-focus: var(--primary-text-light);
+$btn-primary-color-font-focus: var(--second-color);
+
+$btn-primary-color-bg-disabled: var(--grey-third-color);
+$btn-primary-color-border-disabled: var(--grey-third-color);
+$btn-primary-color-font-disabled: var(--main-color);
+// Secondary
+$btn-secondary-color-bg: var(--second-color);
+$btn-secondary-color-font: var(--primary-color);
+$btn-secondary-color-border: var(--second-color);
+
+$btn-secondary-color-bg-hover: "";
+$btn-secondary-color-font-hover: "";
+$btn-secondary-color-border-hover: "";
+
+$btn-secondary-color-bg-focus: "";
+$btn-secondary-color-border-focus: "";
+$btn-secondary-color-font-focus: var(--hover-color);
+
+$btn-secondary-color-bg-disabled: "";
+$btn-secondary-color-font-disabled: "";
+$btn-secondary-color-border-disabled: "";
+// Outline
+$btn-outline-color-bg: var(--main-color);
+$btn-outline-color-font: var(--primary-color);
+$btn-outline-color-border: var(--third-color);
+
+$btn-outline-color-bg-hover: var(--grey-second-color);
+$btn-outline-color-font-hover: var(--primary-color);
+$btn-outline-color-border-hover: var(--third-color);
+
+$btn-outline-color-bg-focus: "";
+$btn-outline-color-font-focus: var(--hover-color);
+$btn-outline-color-font-disabled: "";
+
+$btn-outline-color-bg-disabled: "";
+$btn-outline-color-border-focus: "";
+$btn-outline-color-border-disabled: "";
 
 // ==== Input ===
 $input-shadow-color-focus: var(--focus-color);
 $input-shadow-color-error: var(--error-color);
 
-$input-bg-color: "";
+$input-bg-color: var(--main-color);
 $input-bg-color-hover: "";
 $input-bg-color-focus: "";
 $input-bg-color-disabled: var(--secondary-text-dark);
@@ -61,8 +73,8 @@ $input-font-color-hover: "";
 $input-font-color-disabled: var(--primary--text-color);
 $input-font-color-error: "";
 
-$input-color-border: var(--primary-text-light);
-$input-color-border-hover: "";
+$input-color-border: var(--third-color);
+$input-color-border-hover: var(--grey-other-color);
 $input-color-border-focus: var(--focus-color);
 $input-color-border-disabled: var(--primary--text-color);
 $input-color-border-error: var(--error-color);
@@ -91,8 +103,8 @@ $radio-bg-color-checked: "";
 $radio-bg-color-disabled: "";
 $radio-dot-bg-color: "";
 
-// === Modal 
-$modal-bg-color: '';
+// === Modal
+$modal-bg-color: "";
 
 // === Colors
 $white-400: #fbfbfb;
@@ -105,8 +117,6 @@ $grey-600: #383838;
 $grey-700: #2c2c2c;
 $orange-500: #ff5c00;
 $orange-800: #c14600;
-
-
 
 // === Spacing
 $base-spacing: 0.8rem;

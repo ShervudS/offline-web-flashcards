@@ -43,6 +43,7 @@ export const FlashCardForm = ({ onSave }: TFlashCardForm) => {
       />
 
       <InputControl name="answer" type="text" placeholder="Answer" required />
+
       <Button type="submit"> Save</Button>
     </form>
   );

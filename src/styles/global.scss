@@ -1,58 +1,29 @@
 @use "_variables.scss" as *;
 
 :root {
-  --main-bg-color: #ffffff;
-  --primary-bg-color: #f4f4f4;
-  --second-bg-color: #e0e0e0;
+  --main-color: #ffffff;
+  --primary-color: #18181b;
+  --second-color: #f4f4f5;
+  --third-color: #212123;
 
-  // Три оттенка для neutral текста (неактивный текст, подсказки)
-  --main-text-color: #b0b0b0; // Светло-серый нейтральный текст
-  --primary--text-color: #808080; // Средне-серый для второстепенных элементов
-  --second-text-color: #4d4d4d; // Темный серый для подсказок и неактивных элементов
-
-  // Три оттенка для primary текста (главный текст, заголовки)
-  --primary-text-light: #000000; // Черный текст для заголовков на светлом фоне
-  --primary-text-medium: #333333; // Темно-серый для основного текста
-  --primary-text-dark: #666666; // Средний серый для второстепенного текста
-
-  // Три оттенка для secondary текста (текст вспомогательных элементов)
-  --secondary-text-light: #808080; // Светлый второстепенный текст
-  --secondary-text-medium: #999999; // Средний серый второстепенный текст
-  --secondary-text-dark: #e8e8e8; // Легкий оттенок для менее важных элементов
-
-  // Один оттенок для событий (error, success, warning, focus, hover)
-  --error-color: #d32f2f; // Красный для ошибок
-  --success-color: #388e3c; // Зеленый для успеха
-  --warning-color: #ffa000; // Оранжевый для предупреждений
-  --focus-color: #1976d2; // Синий для фокуса
-  --hover-color: #ff5722; // Насыщенный оранжевый для hover состояния
+  --error-color: #d32f2f;
+  --success-color: #388e3c;
+  --warning-color: #ffa000;
 }
 
 :root[data-theme="dark"] {
-  --main-bg-color: #1e1e1e;
-  --primary-bg-color: #2a2a2a;
-  --second-bg-color: #1e1e1e;
+  --main-color: #070708;
+  --primary-color: #fafafa;
+  --second-color: #27272a;
+  --third-color: #212123;
+  --grey-color: #e3e3e3;
+  --grey-second-color: #18181b;
+  --grey-third-color: #828283;
+  --grey-other-color: #474747;
 
-  --main-text-color: #8c8c8c;
-  --primary--text-color: #a9a9a9;
-  --second-text-color: #c0c0c0;
-
-  // Три оттенка для primary текста (главный текст, заголовки)
-  --primary-text-dark: #f0f0f0; // Светлый почти белый текст для заголовков на темном фоне
-  --primary-text-medium: #e0e0e0; // Чуть темнее для основного текста
-  --primary-text-light: #d1d1d1; // Тонкий оттенок для второстепенных элементов
-
-  // Три оттенка для secondary текста (текст вспомогательных элементов)
-  --secondary-text-dark: #b0b0b0; // Темный второстепенный текст
-  --secondary-text-medium: #bebebe; // Средний второстепенный текст
-  --secondary-text-light: #d8d8d8; // Легкий оттенок для менее важных элементов
-
-  // Один оттенок для событий (error, success, warning, focus, hover)
-  --error-color: #ff4c4c; // Яркий красный для ошибок
-  --success-color: #4caf50; // Зеленый для успеха
-  --warning-color: #ffc107; // Желтый для предупреждений
-  --focus-color: #1976d2; // Золотистый для фокуса
-  --hover-color: #ff8c00; // Насыщенный оранжевый для hover состояния
+  --error-color: #d32f2f;
+  --success-color: #388e3c;
+  --warning-color: #ffa000;
 }
 
 *,
@@ -74,12 +45,12 @@ html {
   width: 100%;
   box-sizing: inherit;
   font-size: 10px;
-  color: var(--primary-text-light);
+  color: var(--primary-color);
   scroll-behavior: smooth;
 }
 
 body {
-  background-color: var(--main-bg-color);
+  background-color: var(--main-color);
 }
 
 ul,

@@ -1,10 +1,9 @@
-.button {
+.baseButton {
   display: flex;
   align-items: center;
   gap: $base-spacing;
-  background-color: $btn-bg-color;
-  color: $btn-font-color;
-  border: 1px solid $btn-border-color;
+  border-width: 1px;
+  border-style: solid;
   border-radius: $border-size;
   padding: $base-spacing $desktop-padding;
 
@@ -17,21 +16,80 @@
   );
 
   &:disabled {
-    background-color: $btn-bg-color-disabled;
-    color: $btn-font-color-disabled;
-    border-color: $btn-border-color-disabled;
-  }
-
-  &:focus {
-    background-color: $btn-bg-color-focus;
-    border-color: $btn-border-color-focus;
-  }
-
-  &:hover:not(:disabled) {
-    background-color: $btn-bg-color-hover;
-    color: $btn-font-color-hover;
-    border-color: $btn-border-color-hover;
+    cursor: not-allowed;
   }
 
   @include font-btn;
+}
+
+.primaryButtonColors {
+  background-color: $btn-primary-color-bg;
+  color: $btn-primary-color-font;
+  border-color: $btn-primary-color-border;
+
+  &:disabled {
+    background-color: $btn-primary-color-bg-disabled;
+    color: $btn-primary-color-font-disabled;
+    border-color: $btn-primary-color-border-disabled;
+  }
+
+  &:focus {
+    background-color: $btn-primary-color-bg-focus;
+    border-color: $btn-primary-color-border-focus;
+    color: $btn-primary-color-font-focus;
+  }
+
+  &:hover:not(:disabled) {
+    background-color: $btn-primary-color-bg-hover;
+    color: $btn-primary-color-font-hover;
+    border-color: $btn-primary-color-border-hover;
+  }
+}
+
+.secondaryButtonColors {
+  background-color: $btn-secondary-color-bg;
+  color: $btn-secondary-color-font;
+  border-color: $btn-secondary-color-border;
+
+  &:disabled {
+    background-color: $btn-secondary-color-bg-disabled;
+    color: $btn-secondary-color-font-disabled;
+    border-color: $btn-secondary-color-border-disabled;
+  }
+
+  &:focus {
+    background-color: $btn-secondary-color-bg-focus;
+    border-color: $btn-secondary-color-border-focus;
+    color: $btn-secondary-color-font-focus;
+  }
+
+  &:hover:not(:disabled) {
+    background-color: $btn-secondary-color-bg-hover;
+    color: $btn-secondary-color-font-hover;
+    border-color: $btn-secondary-color-border-hover;
+  }
+}
+
+.outlineButtonColors {
+  background-color: $btn-outline-color-bg;
+  color: $btn-outline-color-font;
+  border-color: $btn-outline-color-border;
+
+  &:disabled {
+    background-color: $btn-outline-color-bg-disabled;
+    color: $btn-outline-color-font-disabled;
+    border-color: $btn-outline-color-border-disabled;
+  }
+
+  &:focus {
+    background-color: $btn-outline-color-bg-focus;
+    border-color: $btn-outline-color-border-focus;
+    color: $btn-outline-color-font-focus;
+  }
+
+  &:hover:not(:disabled) {
+    background-color: $btn-outline-color-bg-hover;
+    color: $btn-outline-color-font-hover;
+    border-color: $btn-outline-color-border-hover;
+  }
 }

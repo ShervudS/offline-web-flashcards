@@ -2,17 +2,17 @@ const version = "v0.1";
 
 const staticCacheName = version + "staticfiles";
 const pagesCacheName = "pages";
-const urlsToCache = ["/", "/icons/icon-192x192.png"];
+// const urlsToCache = ["/", "/icons/icon-192x192.png"];
 const cacheList = [staticCacheName, pagesCacheName];
 
-const stashInCache = async (request, cacheName) =>
-  fetch(request).then((responseFromFetch) => {
-    caches
-      .open(cacheName)
-      .then((theCache) => theCache.put(request, responseFromFetch));
-  });
+// const stashInCache = async (request, cacheName: string) =>
+//   fetch(request).then((responseFromFetch) => {
+//     caches
+//       .open(cacheName)
+//       .then((theCache) => theCache.put(request, responseFromFetch));
+//   });
 
-const trimCache = (cacheName, maxItems) => {
+const trimCache = (cacheName: string, maxItems: number) => {
   caches.open(cacheName).then((cache) => {
     cache.keys().then((items) => {
       if (items.length > maxItems) {
@@ -50,13 +50,33 @@ addEventListener("activate", (activateEvent) => {
   );
 });
 
-addEventListener("fetch", (fetchEvent) => {
+addEventListener("fetch", (fetchEvent: FetchEvent) => {
   const request = fetchEvent.request;
   const requestUrl = new URL(fetchEvent.request.url);
 
-  if (request.headers.get("Accept").includes("text/html")) {
+  if (request.method !== "GET") {
     fetchEvent.respondWith(
-      fetch(request).catch(() => caches.match("/index.html"))
+      fetch(request).catch(() =>
+        caches.match("/index.html")
+      ) as Promise<Response>
+    );
+    return;
+  }
+
+  if (request.headers.get("Accept")?.includes("text/html")) {
+    fetchEvent.respondWith(
+      fetch(request).catch(
+        () => caches.match("/index.html") as Promise<Response>
+      )
+    );
+    return;
+  }
+
+  if (request.headers.get("Accept")?.includes("text/html")) {
+    fetchEvent.respondWith(
+      fetch(request).catch(
+        () => caches.match("/index.html") as Promise<Response>
+      )
     );
     return;
   }
@@ -88,17 +108,14 @@ addEventListener("fetch", (fetchEvent) => {
     !request.url.startsWith("chrome-extension")
   ) {
     fetchEvent.respondWith(
-      caches.open(staticCacheName).then((cache) => {
-        return cache.match(fetchEvent.request).then((response) => {
-          if (response) {
-            return response;
-          }
-
-          return fetch(fetchEvent.request).then((networkResponse) => {
-            cache.put(fetchEvent.request, networkResponse.clone());
-            return networkResponse;
-          });
-        });
+      caches.open(staticCacheName).then(async (cache) => {
+        const response = await cache.match(fetchEvent.request);
+        if (response) {
+          return response;
+        }
+        const networkResponse = await fetch(fetchEvent.request);
+        cache.put(fetchEvent.request, networkResponse.clone());
+        return networkResponse;
       })
     );
     return;

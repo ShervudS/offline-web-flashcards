@@ -68,3 +68,7 @@ export const getBaseCardCnfig: TGetBaseCardCnfig = ({ answer, question }) => {
     nextReview: curDateTime,
   };
 };
+
+export const buildWordCardHint = (word: string) => {
+  return Array.from({ length: word.length }, (_) => "_");
+};

@@ -1,18 +1,24 @@
 .card {
-  border: 2px solid #ccc;
+  border: 2px solid var(--second-color);
   border-radius: 10px;
-  padding: 20px;
-  min-width: 300px;
+  padding: 2rem;
+  min-width: 30rem;
+  width: 100%;
+  max-width: 60rem;
   min-height: 200px;
   text-align: center;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  background-color: #f9f9f9;
+  background-color: var(--main-color);
 }
 
 .question {
   font-size: 18px;
   margin-bottom: 15px;
   font-weight: bold;
+}
+
+.cardHint {
+  letter-spacing: 0.4rem;
 }
 
 .answer {
@@ -62,4 +68,11 @@
   &:hover {
     background-color: #0056b3;
   }
+}
+
+.cardAnswerActions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
 }

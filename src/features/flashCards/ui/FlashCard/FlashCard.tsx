@@ -1,8 +1,13 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 
-import { updateCardLearningStatus } from "_features/flashCards/utils/updateCard";
+import {
+  buildWordCardHint,
+  updateCardLearningStatus,
+} from "_features/flashCards/utils/updateCard";
 
 import { TFlashCard } from "_features/flashCards/types";
+
+import { useBoolean } from "_hooks/useBoolean";
 
 import styles from "./styles.module.scss";
 
@@ -13,19 +18,26 @@ type TFlashCardProps = {
 };
 
 export const FlashCard = ({ card, onCorrect, onWrong }: TFlashCardProps) => {
-  const [showAnswer, setShowAnswer] = useState(false);
+  const {
+    value: isShowAnswer,
+    setTrue: onShowAnswer,
+    setFalse: onHideAnswer,
+  } = useBoolean();
+  const {
+    value: isShowHint,
+    setTrue: onShowHint,
+    setFalse: onHideHint,
+  } = useBoolean();
+
   const startTimeRef = useRef(0);
 
   useEffect(() => {
     startTimeRef.current = Date.now();
   }, [card.id]);
 
-  const handleShowAnswer = () => {
-    setShowAnswer(true);
-  };
-
   const handleCorrect = () => {
-    setShowAnswer(false);
+    onHideAnswer();
+    onHideHint();
     onCorrect(
       updateCardLearningStatus({
         card,
@@ -36,7 +48,8 @@ export const FlashCard = ({ card, onCorrect, onWrong }: TFlashCardProps) => {
   };
 
   const handleWrong = () => {
-    setShowAnswer(false);
+    onHideAnswer();
+    onHideHint();
     onWrong(
       updateCardLearningStatus({
         card,
@@ -52,37 +65,48 @@ export const FlashCard = ({ card, onCorrect, onWrong }: TFlashCardProps) => {
         <h2>{card.question}</h2>
       </div>
 
-      {showAnswer && (
+      {isShowAnswer && (
         <div className={styles.answer}>
           <p>{card.answer}</p>
         </div>
       )}
 
+      <div className={styles.cardHint}>
+        {isShowHint && <p>{buildWordCardHint(card.answer)}</p>}
+        <button onClick={onShowHint}>Показать подсказку</button>
+      </div>
+
+      {/* {showHint && (
+        <div className={styles.answer}>
+          <p>{buildWordCardHint(card.answer)}</p>
+        </div>
+      )} */}
+
       <div className={styles.buttons}>
-        {!showAnswer ? (
+        {!isShowAnswer && (
           <button
             className={`${styles.button} ${styles.showAnswer}`}
-            onClick={handleShowAnswer}
+            onClick={onShowAnswer}
           >
             Показать ответ
           </button>
-        ) : (
-          <>
-            <button
-              className={`${styles.button} ${styles.wrong}`}
-              onClick={handleWrong}
-            >
-              Не помню
-            </button>
-
-            <button
-              className={`${styles.button} ${styles.correct}`}
-              onClick={handleCorrect}
-            >
-              Помню
-            </button>
-          </>
         )}
+      </div>
+
+      <div className={styles.cardAnswerActions}>
+        <button
+          className={`${styles.button} ${styles.wrong}`}
+          onClick={handleWrong}
+        >
+          Не помню
+        </button>
+
+        <button
+          className={`${styles.button} ${styles.correct}`}
+          onClick={handleCorrect}
+        >
+          Помню
+        </button>
       </div>
     </div>
   );

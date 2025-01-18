@@ -2,14 +2,14 @@ import { useCallback, useEffect, useState } from "react";
 
 import { FlashCardForm } from "../FlashCardForm";
 import { CardsListPreview } from "../CardsListPreview";
-
 import { CardsIndexedDB } from "_features/flashCards/store";
-
-import { TFlashCard } from "_features/flashCards/types";
 import { FlashCard } from "../FlashCard/FlashCard";
 import { Button } from "_shared/Button";
 
+import { TFlashCard } from "_features/flashCards/types";
+
 import styles from "./style.module.scss";
+import { LearningProgress } from "../LearningProgress";
 
 export const FlashCardsWrapper = () => {
   const cardsDb = new CardsIndexedDB("flashCards", "cards");
@@ -86,11 +86,18 @@ export const FlashCardsWrapper = () => {
         )}
 
         {isStartLearning && cards?.[currentIndex] && (
-          <FlashCard
-            card={cards[currentIndex]}
-            onCorrect={handleCorrect}
-            onWrong={handleWrong}
-          />
+          <>
+            <LearningProgress
+              currentPosotion={currentIndex}
+              amountCards={cards.length}
+            />
+
+            <FlashCard
+              card={cards[currentIndex]}
+              onCorrect={handleCorrect}
+              onWrong={handleWrong}
+            />
+          </>
         )}
       </div>
 

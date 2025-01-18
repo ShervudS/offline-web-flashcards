@@ -28,9 +28,10 @@
       "_features/*": ["src/features/*"],
       "_processed/*": ["src/processed/*"],
       "_shared/*": ["src/shared/*"],
+      "_hooks/*": ["src/hooks/*"],
       "_configs/*": ["src/configs/*"],
       "_styles/*": ["src/styles/*"]
     }
   },
-  "include": ["src", "public/sw.js"]
+  "include": ["src"],
 }

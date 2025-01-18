@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "target": "es6",
+    "module": "none",
+    "outFile": "./dist/sw.js",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "noImplicitAny": true,
+    "moduleResolution": "node",
+    "lib": ["webworker", "es6"],
+    "allowJs": false
+  },
+  "include": ["src/processed/serviceWorker/sw.ts"],
+  "exclude": ["node_modules"]
+}

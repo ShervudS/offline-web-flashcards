@@ -12,6 +12,7 @@ export default defineConfig({
       _features: "/src/features",
       _processed: "/src/processed",
       _shared: "/src/shared",
+      _hooks: "/src/hooks",
       _utils: "/src/utils",
       _configs: "/src/configs",
       _styles: "/src/styles",
@@ -36,10 +37,15 @@ export default defineConfig({
 
   build: {
     rollupOptions: {
+      input: {
+        main: "index.html",
+        sw: "src/processed/serviceWorker/sw.ts",
+      },
       output: {
         hashCharacters: "base36",
         chunkFileNames: "assets/[hash].js",
-        entryFileNames: "assets/[hash].js",
+        entryFileNames: ({ name: entryName }) =>
+          entryName === "sw" ? "[name].js" : "assets/[hash].js",
         assetFileNames: "assets/[hash][extname]",
       },
     },
