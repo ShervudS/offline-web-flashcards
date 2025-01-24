@@ -1,11 +1,12 @@
 import { FlashCardInfo } from "./FlashCardInfo";
 
-import { TFlashCard } from "_features/flashCards/types";
+import type { Nullable } from "_types/index";
+import type { TFlashCard } from "_entities/cards/types";
 
 import styles from "./styles.module.scss";
 
 type TCardsListPreview = {
-  cards: TFlashCard[] | null;
+  cards: Nullable<TFlashCard[]>;
 };
 
 export const CardsListPreview = ({ cards }: TCardsListPreview) => {

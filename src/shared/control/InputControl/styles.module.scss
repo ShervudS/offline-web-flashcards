@@ -61,6 +61,13 @@
   height: 2.4rem;
   background-color: $input-bg-color;
 
+  &:-webkit-autofill,
+  &:-webkit-autofill:hover,
+  &:-webkit-autofill:focus,
+  &:-webkit-autofill:active {
+    background-color: $input-bg-color;
+  }
+
   &::placeholder {
     color: $input-font-color-placeholder;
   }

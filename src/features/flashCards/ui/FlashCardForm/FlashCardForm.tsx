@@ -1,20 +1,18 @@
-import { FormEventHandler } from "react";
+import { FormEventHandler, useState } from "react";
 
 import { InputControl } from "_shared/control/InputControl";
 import { Button } from "_shared/Button";
 
-import { getBaseCardCnfig } from "_features/flashCards/utils/updateCard";
-
-import { TFlashCard } from "_features/flashCards/types";
+import type { TCreateFlashCard } from "_entities/cards/types";
 
 import styles from "./styles.module.scss";
 
 type TFlashCardForm = {
-  onSave: (arg0: TFlashCard) => void;
+  onSave: (arg0: TCreateFlashCard) => void;
 };
 
 export const FlashCardForm = ({ onSave }: TFlashCardForm) => {
-  // const [errors, setErrors] = useState<null | Record<string, any>>(null);
+  const [errors, setErrors] = useState<null | Record<string, any>>(null);
 
   const onSaveCard: FormEventHandler<HTMLFormElement> = (e) => {
     let newFlashCard: Record<string, any> = {};
@@ -23,26 +21,32 @@ export const FlashCardForm = ({ onSave }: TFlashCardForm) => {
     e.preventDefault();
 
     for (let [key, value] of formData.entries()) {
+      /**
+       * TODO:
+       * Логика проверки на ошибки
+       */
       if (value) newFlashCard[key] = value;
     }
-    /**
-     * TODO:
-     * Логика проверки на ошибки + логика сохранения
-     */
-
-    onSave(getBaseCardCnfig(newFlashCard as any));
+    onSave(newFlashCard as TCreateFlashCard);
   };
 
   return (
     <form onSubmit={onSaveCard} className={styles.form}>
+      <p>Create new flashcard</p>
+
       <InputControl
         name="question"
-        type="text"
         placeholder="Question"
+        error={errors?.question}
         required
       />
 
-      <InputControl name="answer" type="text" placeholder="Answer" required />
+      <InputControl
+        name="answer"
+        placeholder="Answer"
+        error={errors?.answer}
+        required
+      />
 
       <Button type="submit"> Save</Button>
     </form>

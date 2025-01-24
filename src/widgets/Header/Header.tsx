@@ -1,4 +1,4 @@
-import { ThemeButton } from "_processed/theme/ui/ThemeButton";
+import { ThemeButton } from "_processes/theme/ui/ThemeButton";
 
 import styles from "./styles.module.scss";
 

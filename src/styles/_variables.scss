@@ -59,27 +59,27 @@ $btn-outline-color-border-focus: "";
 $btn-outline-color-border-disabled: "";
 
 // ==== Input ===
-$input-shadow-color-focus: var(--focus-color);
+$input-shadow-color-focus: var(--grey-third-color);
 $input-shadow-color-error: var(--error-color);
 
 $input-bg-color: var(--main-color);
-$input-bg-color-hover: "";
-$input-bg-color-focus: "";
+$input-bg-color-hover: var(--main-color);
+$input-bg-color-focus: var(--main-color);
 $input-bg-color-disabled: var(--secondary-text-dark);
 
-$input-font-color: "";
+$input-font-color: var(--primary-color);
 $input-font-color-placeholder: "";
-$input-font-color-hover: "";
+$input-font-color-hover: var(--primary-color);
 $input-font-color-disabled: var(--primary--text-color);
-$input-font-color-error: "";
+$input-font-color-error: var(--error-color);
 
-$input-color-border: var(--third-color);
-$input-color-border-hover: var(--grey-other-color);
+$input-color-border: var(--second-color);
+$input-color-border-hover: var(--grey-second-color);
 $input-color-border-focus: var(--focus-color);
 $input-color-border-disabled: var(--primary--text-color);
 $input-color-border-error: var(--error-color);
 
-$input-font-color-hint-text: "";
+$input-font-color-hint-text: var(--primary-color);
 $input-font-color-hint-text-error: var(--error-color);
 $input-font-color-hint-text-disabled: var(--primary--text-color);
 

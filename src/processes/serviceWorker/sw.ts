@@ -1,16 +1,20 @@
-const version = "v0.1";
+const version = "v0.1.1";
+
+const enum METHOD {
+  GET = "GET",
+}
 
 const staticCacheName = version + "staticfiles";
 const pagesCacheName = "pages";
 // const urlsToCache = ["/", "/icons/icon-192x192.png"];
 const cacheList = [staticCacheName, pagesCacheName];
 
-// const stashInCache = async (request, cacheName: string) =>
-//   fetch(request).then((responseFromFetch) => {
-//     caches
-//       .open(cacheName)
-//       .then((theCache) => theCache.put(request, responseFromFetch));
-//   });
+const stashInCache = async (request: Request, cacheName: string) =>
+  fetch(request).then((responseFromFetch) => {
+    caches
+      .open(cacheName)
+      .then((theCache) => theCache.put(request, responseFromFetch));
+  });
 
 const trimCache = (cacheName: string, maxItems: number) => {
   caches.open(cacheName).then((cache) => {
@@ -50,11 +54,11 @@ addEventListener("activate", (activateEvent) => {
   );
 });
 
-addEventListener("fetch", (fetchEvent: FetchEvent) => {
+addEventListener("fetch", (fetchEvent) => {
   const request = fetchEvent.request;
   const requestUrl = new URL(fetchEvent.request.url);
 
-  if (request.method !== "GET") {
+  if (request.method !== METHOD.GET) {
     fetchEvent.respondWith(
       fetch(request).catch(() =>
         caches.match("/index.html")

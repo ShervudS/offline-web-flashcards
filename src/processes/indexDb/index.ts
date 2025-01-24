@@ -1,6 +1,4 @@
-import { TFlashCard, TUpdateFlashCard } from "../types";
-
-export class CardsIndexedDB {
+export class IndexDB<T extends { id: number }> {
   private dbName: string;
   private storeName: string;
   private version: number;
@@ -18,9 +16,6 @@ export class CardsIndexedDB {
     await this.init();
   }
 
-  /**
-   * Инициализация базы данных
-   */
   async init(): Promise<void> {
     return new Promise((resolve, reject) => {
       const request = indexedDB.open(this.dbName, this.version);
@@ -48,10 +43,7 @@ export class CardsIndexedDB {
     });
   }
 
-  /**
-   * Добавить данные
-   */
-  async add(data: TFlashCard): Promise<string> {
+  async add(data: T): Promise<string> {
     await this.ensureDBInitialized();
 
     return new Promise((resolve, reject) => {
@@ -70,10 +62,7 @@ export class CardsIndexedDB {
     });
   }
 
-  /**
-   * Обновить данные
-   */
-  async update(data: TUpdateFlashCard): Promise<string> {
+  async update(data: T): Promise<string> {
     await this.ensureDBInitialized();
 
     return new Promise((resolve, reject) => {
@@ -92,10 +81,7 @@ export class CardsIndexedDB {
     });
   }
 
-  /**
-   * Получить данные по ключу
-   */
-  async get(id: number): Promise<TFlashCard | undefined> {
+  async get(id: number): Promise<T | undefined> {
     await this.ensureDBInitialized();
 
     return new Promise((resolve, reject) => {
@@ -107,7 +93,7 @@ export class CardsIndexedDB {
       const request = store.get(id);
 
       request.onsuccess = (event) =>
-        resolve((event.target as IDBRequest).result as TFlashCard | undefined);
+        resolve((event.target as IDBRequest).result as T | undefined);
       request.onerror = (event) =>
         reject(
           `Ошибка получения данных: ${(event.target as IDBRequest).error}`
@@ -115,10 +101,7 @@ export class CardsIndexedDB {
     });
   }
 
-  /**
-   * Удалить данные
-   */
-  async delete(id: TFlashCard["id"]): Promise<string> {
+  async delete(id: string): Promise<string> {
     await this.ensureDBInitialized();
 
     return new Promise((resolve, reject) => {
@@ -135,10 +118,7 @@ export class CardsIndexedDB {
     });
   }
 
-  /**
-   * Получить все данные
-   */
-  async getAll(): Promise<TFlashCard[]> {
+  async getAll(): Promise<T[]> {
     await this.ensureDBInitialized();
 
     return new Promise((resolve, reject) => {
@@ -150,7 +130,7 @@ export class CardsIndexedDB {
       const request = store.getAll();
 
       request.onsuccess = (event) =>
-        resolve((event.target as IDBRequest).result as TFlashCard[]);
+        resolve((event.target as IDBRequest).result as T[]);
       request.onerror = (event) =>
         reject(
           `Ошибка получения всех данных: ${(event.target as IDBRequest).error}`

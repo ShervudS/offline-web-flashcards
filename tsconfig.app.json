@@ -26,12 +26,14 @@
     "paths": {
       "_widgets/*": ["src/widgets/*"],
       "_features/*": ["src/features/*"],
-      "_processed/*": ["src/processed/*"],
+      "_entities/*": ["src/entities/*"],
       "_shared/*": ["src/shared/*"],
+      "_processes/*": ["src/processes/*"],
       "_hooks/*": ["src/hooks/*"],
       "_configs/*": ["src/configs/*"],
+      "_types/*": ["src/types/*"],
       "_styles/*": ["src/styles/*"]
     }
   },
-  "include": ["src"],
+  "include": ["src"]
 }

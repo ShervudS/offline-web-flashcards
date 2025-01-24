@@ -27,5 +27,5 @@ export type TFlashCard = {
   repetition: number;
 };
 
-export type TCreateFlashCard = Omit<TFlashCard, "id">;
+export type TCreateFlashCard = Pick<TFlashCard, "question" | "answer">;
 export type TUpdateFlashCard = TFlashCard;
