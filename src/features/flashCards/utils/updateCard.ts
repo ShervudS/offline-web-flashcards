@@ -1,14 +1,51 @@
 import type { TCreateFlashCard, TFlashCard } from "_entities/cards/types";
 
-// Максимальное время для правильного ответа (в секундах)
+/**
+ * Минимальное значение Easiness Factor
+ */
+const MIN_EF = 1.3;
+
+/**
+ * Базовый прирост EF при правильном ответе
+ */
+const BASE_EF_INCREMENT = 0.2;
+
+/**
+ * Множитель для штрафа за низкий recallQuality
+ */
+const QUALITY_PENALTY_MULTIPLIER = 0.05;
+
+/**
+ * Дополнительный множитель штрафа для более сильного эффекта
+ */
+const QUALITY_PENALTY_EXPONENT = 0.01;
+
+/**
+ *  Максимальное время для правильного ответа (в секундах)
+ */
 const MAX_TIME_TO_CORRECT = 10;
-// Количество миллисекунд в дне
+
+/**
+ * Количество миллисекунд в одном дне
+ */
 const MILLSEC_IN_DAY = 24 * 60 * 60 * 1000;
-// Штрафы за использование подсказок
+
+/**
+ * Максимальное значение качества ответа
+ */
+const MAX_RECALL_QUALITY = 5;
+
+/**
+ * Штрафы за использование подсказок
+ *
+ * - none - Без подсказки: без штрафа.
+ * - firstLetter - Подсказка с первой буквой: уменьшение на 15%;
+ * - letters - Подсказка с количеством букв: уменьшение на 30%;
+ */
 const hintPenalties = {
-  letters: 0.7, // Подсказка с количеством букв: уменьшение на 30%
-  firstLetter: 0.85, // Подсказка с первой буквой: уменьшение на 15%
-  none: 1, // Без подсказки: без штрафа
+  none: 1,
+  letters: 0.8,
+  firstLetter: 0.9,
 };
 
 type TUpdateCardLearningStatus = {
@@ -31,35 +68,87 @@ export const updateCardLearningStatus = ({
   hintType = "none",
   isRepeatCard,
 }: TUpdateCardLearningStatus) => {
-  // Определяем штраф на основе типа подсказки
   const hintPenalty = hintPenalties[hintType];
 
-  // Рассчитываем качество ответа
+  /**
+   * Рассчитывает качество ответа пользователя.
+   *
+   * Формула:
+   * recallQuality =
+   *  isCorrect === true
+   *    ? max(0, (MAX_RECALL_QUALITY - (responseTime / MAX_TIME_TO_CORRECT) * MAX_RECALL_QUALITY) * HINT_PENALTY)
+   *    : 1 * HINT_PENALTY
+   *
+   * Где:
+   * - MAX_RECALL_QUALITY: Максимальная оценка качества (по умолчанию 5).
+   * - responseTime: Время ответа пользователя (в секундах).
+   * - MAX_TIME_TO_CORRECT: Максимальное время для корректного ответа (по умолчанию 10 секунд).
+   * - HINT_PENALTY: Штраф за использование подсказки (например, 0.8 — уменьшение на 20%).
+   *
+   * Пример:
+   * - При responseTime = 5, MAX_TIME_TO_CORRECT = 10, HINT_PENALTY = 1:
+   *   recallQuality = 5 - (5 / 10) * 5 = 3.75.
+   */
   const recallQuality = isCorrect
-    ? Math.max(0, (5 - (responseTime / MAX_TIME_TO_CORRECT) * 5) * hintPenalty)
-    : 1 * hintPenalty; // Если ответ неверный, применяем штраф за подсказку
+    ? Math.max(
+        0,
+        (MAX_RECALL_QUALITY -
+          (responseTime / MAX_TIME_TO_CORRECT) * MAX_RECALL_QUALITY) *
+          hintPenalty
+      )
+    : 1 * hintPenalty;
 
-  // Обновляем Easiness Factor только если это первый раз или первый правильный ответ в режиме повторения
+  /**
+   * Рассчитывает новый Easiness Factor (EF), если это первый раз или первый правильный ответ в режиме повторения.
+   *
+   * Формула:
+   * newEf = max(
+   *   MIN_EF,
+   *   card.ef + (
+   *     BASE_EF_INCREMENT -
+   *     (MAX_RECALL_QUALITY - recallQuality) * (
+   *       QUALITY_PENALTY_MULTIPLIER +
+   *       (MAX_RECALL_QUALITY - recallQuality) * QUALITY_PENALTY_EXPONENT
+   *     )
+   *   )
+   * )
+   *
+   * Где:
+   * - MIN_EF: Минимальное значение Easiness Factor (по умолчанию 1.3).
+   * - BASE_EF_INCREMENT: Базовый прирост EF при правильном ответе (по умолчанию 0.2).
+   * - MAX_RECALL_QUALITY: Максимальная оценка качества (по умолчанию 5).
+   * - QUALITY_PENALTY_MULTIPLIER: Множитель штрафа за разницу в recallQuality (по умолчанию 0.05).
+   * - QUALITY_PENALTY_EXPONENT: Дополнительный штрафной множитель (по умолчанию 0.01).
+   *
+   * Пример:
+   * - При card.ef = 2.5, recallQuality = 3.75:
+   *   newEf = max(1.3, 2.5 + (0.2 - (5 - 3.75) * (0.05 + (5 - 3.75) * 0.01))).
+   */
   if (!isRepeatCard || (isRepeatCard && isCorrect && card.repetition === 0)) {
     card.ef = Math.max(
-      1.3,
+      MIN_EF,
       card.ef +
-        (0.1 - (5 - recallQuality) * (0.08 + (5 - recallQuality) * 0.02))
+        (BASE_EF_INCREMENT -
+          (MAX_RECALL_QUALITY - recallQuality) *
+            (QUALITY_PENALTY_MULTIPLIER +
+              (MAX_RECALL_QUALITY - recallQuality) * QUALITY_PENALTY_EXPONENT))
     );
   }
+  
 
   if (recallQuality >= 3) {
-    // Увеличиваем интервал повторения
-    if (card.repetition === 0) {
-      card.interval = 1; // Первый интервал
-    } else if (card.repetition === 1) {
-      card.interval = 6; // Второй интервал
-    } else {
-      card.interval = Math.round(card.interval * card.ef); // Дальнейшие интервалы
+    if (!isRepeatCard) {
+      if (card.repetition === 0) {
+        card.interval = 1; // Первый интервал
+      } else if (card.repetition === 1) {
+        card.interval = 6; // Второй интервал
+      } else {
+        card.interval = Math.round(card.interval * card.ef); // Дальнейшие интервалы
+      }
+      card.repetition++;
     }
-    card.repetition++;
   } else {
-    // Если качество низкое, сбрасываем карточку
+    // Если низкое качество ответа, сбрасываем карточку
     card.repetition = 0;
     card.interval = 1;
   }
