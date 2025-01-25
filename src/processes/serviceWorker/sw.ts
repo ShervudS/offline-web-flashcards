@@ -1,31 +1,53 @@
-const version = "v0.1.1";
+const version = "v0.1.2";
 
 const enum METHOD {
   GET = "GET",
 }
 
+const staticAssetRegex = /\.(js|css)$/;
+const imageRegex = /\.(jpe?g|png|gif|svg|webp|avif)$/i;
 const staticCacheName = version + "staticfiles";
 const pagesCacheName = "pages";
 // const urlsToCache = ["/", "/icons/icon-192x192.png"];
 const cacheList = [staticCacheName, pagesCacheName];
 
-// const stashInCache = async (request: Request, cacheName: string) =>
-//   fetch(request).then((responseFromFetch) => {
-//     caches
-//       .open(cacheName)
-//       .then((theCache) => theCache.put(request, responseFromFetch));
-//   });
+const trimCache = async (cacheName: string, maxItems: number) => {
+  const cache = await caches.open(cacheName);
+  const items = await cache.keys();
 
-const trimCache = (cacheName: string, maxItems: number) => {
-  caches.open(cacheName).then((cache) => {
-    cache.keys().then((items) => {
-      if (items.length > maxItems) {
-        cache.delete(items[0]).then(() => {
-          trimCache(cacheName, maxItems);
-        });
-      }
-    });
-  });
+  if (items.length > maxItems) {
+    await cache.delete(items[0]);
+    await trimCache(cacheName, maxItems);
+  }
+};
+
+const cacheFirstStrategy = async (cacheName: string, request: Request) => {
+  const cache = await caches.open(cacheName);
+
+  const responseFromCache = await cache.match(request);
+  if (responseFromCache) {
+    return responseFromCache;
+  }
+
+  const networkResponse = await fetch(request);
+  cache.put(request, networkResponse.clone());
+  return networkResponse;
+};
+
+const cacheThenNetworkStrategy = async (
+  cacheName: string,
+  request: Request
+) => {
+  const cache = await caches.open(cacheName);
+
+  const responseFromCache = await cache.match(request);
+  if (responseFromCache) {
+    return responseFromCache;
+  }
+
+  const networkResponse = await fetch(request);
+  cache.put(request, networkResponse.clone());
+  return networkResponse;
 };
 
 addEventListener("install", (installEvent) => {
@@ -55,84 +77,40 @@ addEventListener("activate", (activateEvent) => {
 });
 
 addEventListener("fetch", (fetchEvent) => {
-  const request = fetchEvent.request;
+  if (fetchEvent.request.method !== METHOD.GET) {
+    return;
+  }
+
   const requestUrl = new URL(fetchEvent.request.url);
 
-  if (request.method !== METHOD.GET) {
+  if (fetchEvent.request.headers.get("Accept")?.includes("text/html")) {
     fetchEvent.respondWith(
-      fetch(request).catch(() =>
-        caches.match("/index.html")
-      ) as Promise<Response>
+      cacheFirstStrategy(staticCacheName, fetchEvent.request)
     );
     return;
   }
 
-  if (request.headers.get("Accept")?.includes("text/html")) {
+  if (imageRegex.test(fetchEvent.request.url)) {
     fetchEvent.respondWith(
-      fetch(request).catch(
-        () => caches.match("/index.html") as Promise<Response>
-      )
-    );
-    return;
-  }
-
-  if (request.headers.get("Accept")?.includes("text/html")) {
-    fetchEvent.respondWith(
-      fetch(request).catch(
-        () => caches.match("/index.html") as Promise<Response>
-      )
-    );
-    return;
-  }
-
-  if (request.url.match(/\.(jpe?g|png|gif|svg|webp|avif)$/)) {
-    fetchEvent.respondWith(
-      caches.match(request).then((responseFromCache) => {
-        if (responseFromCache) {
-          return responseFromCache;
-        }
-
-        return fetch(request).then((responseFromFetch) => {
-          const copy = responseFromFetch.clone();
-          fetchEvent.waitUntil(
-            caches
-              .open(pagesCacheName)
-              .then((pagesCache) => pagesCache.put(request, copy))
-          );
-          return responseFromFetch;
-        });
-      })
+      cacheThenNetworkStrategy(pagesCacheName, fetchEvent.request)
     );
     return;
   }
 
   if (
-    (requestUrl.pathname.endsWith(".js") ||
-      requestUrl.pathname.endsWith(".css")) &&
-    !request.url.startsWith("chrome-extension")
+    staticAssetRegex.test(requestUrl.pathname) &&
+    !fetchEvent.request.url.startsWith("chrome-extension")
   ) {
     fetchEvent.respondWith(
-      caches.open(staticCacheName).then(async (cache) => {
-        const response = await cache.match(fetchEvent.request);
-        if (response) {
-          return response;
-        }
-        const networkResponse = await fetch(fetchEvent.request);
-        cache.put(fetchEvent.request, networkResponse.clone());
-        return networkResponse;
-      })
+      cacheFirstStrategy(staticCacheName, fetchEvent.request)
     );
     return;
   }
 
   fetchEvent.respondWith(
-    caches.match(request).then((responseFromCache) => {
-      if (responseFromCache) {
-        return responseFromCache;
-      }
-
-      return fetch(request);
-    })
+    caches
+      .match(fetchEvent.request)
+      .then((response) => response || fetch(fetchEvent.request))
   );
 });
 
