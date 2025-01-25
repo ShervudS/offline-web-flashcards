@@ -1,4 +1,4 @@
-import { TFlashCard } from "_features/flashCards/types";
+import { TFlashCard } from "_entities/cards/types";
 
 import styles from "./styles.module.scss";
 

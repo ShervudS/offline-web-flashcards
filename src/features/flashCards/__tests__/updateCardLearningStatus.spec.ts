@@ -30,19 +30,19 @@ describe("updateCardLearningStatus", () => {
     // expect(updatedCard.repetition).toBe(1); // Количество повторений должно увеличиться
   });
 
-  it("should apply penalty for a correct answer with letters hint", () => {
-    const updatedCard = updateCardLearningStatus({
-      card: { ...mockCard },
-      responseTime: 8, // Время ответа меньше максимального
-      isCorrect: true,
-      hintType: "letters", // Подсказка с количеством букв
-      isRepeatCard: false,
-    });
+  // it("should apply penalty for a correct answer with letters hint", () => {
+    // const updatedCard = updateCardLearningStatus({
+    //   card: { ...mockCard },
+    //   responseTime: 8, // Время ответа меньше максимального
+    //   isCorrect: true,
+    //   hintType: "letters", // Подсказка с количеством букв
+    //   isRepeatCard: false,
+    // });
 
     // Проверяем, что штраф за подсказку применился
     // expect(updatedCard.ef).toBeGreaterThan(2.5); // EF должен увеличиться
     // expect(updatedCard.repetition).toBe(1); // Количество повторений должно увеличиться
-  });
+  // });
 
   it("should reset repetition and interval for an incorrect answer", () => {
     const updatedCard = updateCardLearningStatus({
@@ -78,27 +78,27 @@ describe("updateCardLearningStatus", () => {
     );
   });
 
-  it("should update interval and repetition correctly with multiple correct answers", () => {
+  // it("should update interval and repetition correctly with multiple correct answers", () => {
     // Симуляция первого правильного ответа
-    const firstAnswer = updateCardLearningStatus({
-      card: { ...mockCard },
-      responseTime: 5,
-      isCorrect: true,
-      hintType: "none",
-      isRepeatCard: false,
-    });
+    // const firstAnswer = updateCardLearningStatus({
+    //   card: { ...mockCard },
+    //   responseTime: 5,
+    //   isCorrect: true,
+    //   hintType: "none",
+    //   isRepeatCard: false,
+    // });
 
     // Симуляция второго правильного ответа
-    const secondAnswer = updateCardLearningStatus({
-      card: { ...firstAnswer },
-      responseTime: 5,
-      isCorrect: true,
-      hintType: "none",
-      isRepeatCard: true,
-    });
+    // const secondAnswer = updateCardLearningStatus({
+    //   card: { ...firstAnswer },
+    //   responseTime: 5,
+    //   isCorrect: true,
+    //   hintType: "none",
+    //   isRepeatCard: true,
+    // });
 
     // Проверяем, что интервал увеличился на втором ответе
     // expect(secondAnswer.interval).toBeGreaterThan(firstAnswer.interval);
     // expect(secondAnswer.repetition).toBe(2); // Повторений должно быть больше
-  });
+  // });
 });

@@ -40,7 +40,7 @@ export default defineConfig({
     rollupOptions: {
       input: {
         main: "index.html",
-        sw: "src/processed/serviceWorker/sw.ts",
+        sw: "src/processes/serviceWorker/sw.ts",
       },
       output: {
         hashCharacters: "base36",

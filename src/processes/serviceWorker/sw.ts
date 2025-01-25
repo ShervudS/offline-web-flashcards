@@ -9,12 +9,12 @@ const pagesCacheName = "pages";
 // const urlsToCache = ["/", "/icons/icon-192x192.png"];
 const cacheList = [staticCacheName, pagesCacheName];
 
-const stashInCache = async (request: Request, cacheName: string) =>
-  fetch(request).then((responseFromFetch) => {
-    caches
-      .open(cacheName)
-      .then((theCache) => theCache.put(request, responseFromFetch));
-  });
+// const stashInCache = async (request: Request, cacheName: string) =>
+//   fetch(request).then((responseFromFetch) => {
+//     caches
+//       .open(cacheName)
+//       .then((theCache) => theCache.put(request, responseFromFetch));
+//   });
 
 const trimCache = (cacheName: string, maxItems: number) => {
   caches.open(cacheName).then((cache) => {

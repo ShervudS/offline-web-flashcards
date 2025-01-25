@@ -1,4 +1,4 @@
-import { FormEventHandler, useState } from "react";
+import { FormEventHandler } from "react";
 
 import { InputControl } from "_shared/control/InputControl";
 import { Button } from "_shared/Button";
@@ -12,7 +12,7 @@ type TFlashCardForm = {
 };
 
 export const FlashCardForm = ({ onSave }: TFlashCardForm) => {
-  const [errors, setErrors] = useState<null | Record<string, any>>(null);
+  // const [errors, setErrors] = useState<null | Record<string, any>>(null);
 
   const onSaveCard: FormEventHandler<HTMLFormElement> = (e) => {
     let newFlashCard: Record<string, any> = {};
@@ -37,14 +37,14 @@ export const FlashCardForm = ({ onSave }: TFlashCardForm) => {
       <InputControl
         name="question"
         placeholder="Question"
-        error={errors?.question}
+        // error={errors?.question}
         required
       />
 
       <InputControl
         name="answer"
         placeholder="Answer"
-        error={errors?.answer}
+        // error={errors?.answer}
         required
       />
 

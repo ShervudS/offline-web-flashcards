@@ -11,6 +11,6 @@
     "lib": ["webworker", "es6"],
     "allowJs": false
   },
-  "include": ["src/processed/serviceWorker/sw.ts"],
+  "include": ["src/processes/serviceWorker/sw.ts"],
   "exclude": ["node_modules"]
 }
