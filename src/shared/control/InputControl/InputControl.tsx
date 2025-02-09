@@ -1,7 +1,4 @@
 import { ChangeEvent, InputHTMLAttributes, useId } from "react";
-import { clsx } from "clsx";
-
-import styles from "./styles.module.scss";
 
 type TInputControl = InputHTMLAttributes<HTMLInputElement> & {
   value?: string;
@@ -39,7 +36,10 @@ export const InputControl = ({
 
   return (
     <div className="flex flex-col gap-1">
-      <label className= "text-gray-100 dark:text-gray-950 select-none" htmlFor={inputId}>
+      <label
+        className="text-gray-100 dark:text-gray-950 select-none"
+        htmlFor={inputId}
+      >
         {label}
       </label>
 
