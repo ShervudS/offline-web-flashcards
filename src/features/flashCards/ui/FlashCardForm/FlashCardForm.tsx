@@ -31,7 +31,7 @@ export const FlashCardForm = ({ onSave }: TFlashCardForm) => {
 	return (
 		<form
 			onSubmit={onSaveCard}
-			className="flex items-center gap-6 p-8 rounded-2xl"
+			className="flex items-center flex-wrap gap-6 p-8"
 		>
 			<p>Create new flashcard</p>
 

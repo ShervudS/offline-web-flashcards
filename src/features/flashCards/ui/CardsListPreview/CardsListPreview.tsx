@@ -13,7 +13,7 @@ export const CardsListPreview = ({
 	onRemoveCard,
 }: TCardsListPreview) => {
 	return (
-		<div className="w-full grid grid-cols-5 gap-9">
+		<div className="w-full grid gap-9 grid-cols-[repeat(auto-fill,minmax(20rem,20%))]">
 			{cards?.map(({ id, question, answer, ef }) => (
 				<FlashCardInfo
 					key={id}
