@@ -19,23 +19,25 @@
 	},
 	"dependencies": {
 		"clsx": "^2.1.1",
-		"react": "^18.3.1",
-		"react-dom": "^18.3.1"
+		"effector": "^23.3.0",
+		"effector-react": "^23.3.0",
+		"react": "^19.0.0",
+		"react-dom": "^19.0.0"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "1.9.4",
-		"@tailwindcss/vite": "^4.0.1",
-		"@types/node": "^22.10.4",
-		"@types/react": "^18.3.18",
-		"@types/react-dom": "^18.3.5",
-		"@types/serviceworker": "^0.0.113",
+		"@tailwindcss/vite": "^4.0.5",
+		"@types/node": "^22.13.1",
+		"@types/react": "^19.0.8",
+		"@types/react-dom": "^19.0.3",
+		"@types/serviceworker": "^0.0.120",
 		"@vitejs/plugin-react": "^4.3.4",
 		"husky": "^9.1.7",
-		"lint-staged": "^15.4.1",
+		"lint-staged": "^15.4.3",
 		"sass": "^1.83.0",
-		"tailwindcss": "^4.0.1",
-		"typescript": "~5.6.2",
+		"tailwindcss": "^4.0.5",
+		"typescript": "^5.7.3",
 		"vite": "^6.0.5",
-		"vitest": "^3.0.2"
+		"vitest": "^3.0.5"
 	}
 }
