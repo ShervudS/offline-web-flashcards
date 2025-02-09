@@ -1,1 +1,1 @@
-export { LearningProgress } from "./Learning Progress";
+export { LearningProgress } from "./LearningProgress";

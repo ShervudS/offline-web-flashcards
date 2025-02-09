@@ -6,8 +6,6 @@ import { useLearningSession } from "_features/flashCards/hooks/useLearningSessio
 
 import type { TFlashCard } from "_entities/cards/types";
 
-import styles from "./styles.module.scss";
-
 type TSessionLearningCard = {
   cards: TFlashCard[];
 };
@@ -20,12 +18,11 @@ export const SessionLearningCard = ({ cards }: TSessionLearningCard) => {
     amountCardToLearn,
     handleResponse,
     onStartSession,
+    onRetrySession,
   } = useLearningSession(cards);
 
-  console.log(currentIndex, amountCardToLearn);
-
   return (
-    <div className={styles.learnCardContainer}>
+    <div className="w-full flex flex-col justify-center items-center gap-5">
       {!isStartedSession && (
         <div>
           <Button onClick={onStartSession}>Начать изучать</Button>
@@ -41,6 +38,14 @@ export const SessionLearningCard = ({ cards }: TSessionLearningCard) => {
 
           <FlashCard card={currentCard} handleAnswer={handleResponse} />
         </>
+      )}
+
+      {isStartedSession && currentIndex === amountCardToLearn && (
+        <div className="min-w-md max-w-5xl w-full bg-gray-700  dark:bg-gray-400 p-8 rounded-2xl flex flex-col justify-between items-center min-h-40">
+          <p className="text-gray-100 dark:text-gray-800">Всего изучено карточек: {amountCardToLearn}</p>
+
+          <Button onClick={onRetrySession}>Начать заного</Button>
+        </div>
       )}
     </div>
   );

@@ -1,37 +1,38 @@
-import { TFlashCard } from "_entities/cards/types";
+import type { TFlashCard, TRemoveFlashCard } from "_entities/cards/types";
 
-import styles from "./styles.module.scss";
+type TFlashCardInfo = Pick<TFlashCard, "answer" | "question" | "ef" | "id"> & {
+	onRemove: (removeCard: TRemoveFlashCard) => void;
+};
 
-type TFlashCardInfo = Pick<TFlashCard, "answer" | "question" | "ef">;
+export const FlashCardInfo = ({
+	id,
+	ef,
+	answer,
+	question,
+	onRemove,
+}: TFlashCardInfo) => {
+	const normalizedEf = Math.min(Math.max(ef, 1.3), 5);
 
-export const FlashCardInfo = ({ ef, answer, question }: TFlashCardInfo) => {
-  // Нормализация EF для правильной визуализации от 1.3 до 5
-  const normalizedEf = Math.min(Math.max(ef, 1.3), 5);
+	const onClickToRemove = () => {
+		onRemove({ id });
+	};
 
-  // Преобразование EF в процент для шкалы
-  const efPercentage = ((normalizedEf - 1.3) / (5 - 1.3)) * 100;
+	return (
+		<div className="flex flex-col p-8 rounded-2xl bg-gray-800 dark:bg-gray-400">
+			<button onClick={onClickToRemove}>X</button>
 
-  // Генерация цвета на основе EF (hsl)
-  const efColor = `hsl(${efPercentage}, 80%, 50%)`;
+			<div>
+				<p className="text-5xl font-bold text-gray-50 first-letter:uppercase">
+					{answer}
+				</p>
+				<p className="text-2xl text-gray-300">{question}</p>
+			</div>
 
-  return (
-    <div className={styles.card}>
-      {/* Секция с двумя словами */}
-      <div className={styles.wordSection}>
-        <p className={styles.word}>{answer}</p>
-        <p className={styles.translation}>{question}</p>
-      </div>
+			<div className="text-3xl font-bold mt-4 p-4 rounded-xl text-gray-50">
+				EF: {normalizedEf.toFixed(2)}
+			</div>
 
-      {/* Easiness Factor с динамическим цветом */}
-      <div className={styles.ef} style={{ backgroundColor: efColor }}>
-        EF: {normalizedEf.toFixed(2)}
-      </div>
-
-      {/* Прогресс-бар EF */}
-      <div
-        className={styles.efBar}
-        style={{ width: `${efPercentage}%`, backgroundColor: efColor }}
-      />
-    </div>
-  );
+			<div className="w-full h-4 rounded-lg mt-6" />
+		</div>
+	);
 };

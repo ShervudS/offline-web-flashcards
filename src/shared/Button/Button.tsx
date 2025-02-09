@@ -3,12 +3,10 @@ import type {
   PropsWithChildren,
   ReactElement,
 } from "react";
-import clsx from "clsx";
-
-import styles from "./styles.module.scss";
 
 type TButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
   variant?: "primary" | "secondary" | "outline";
+  size?: "sm" | "md" | "lg";
   prefixIcon?: ReactElement;
   postfixIcon?: ReactElement;
 };
@@ -18,23 +16,32 @@ export const Button = ({
   children,
   postfixIcon,
   variant = "primary",
+  size = "md",
   ...rest
-}: PropsWithChildren<TButtonProps>) => (
-  <button
-    className={clsx([
-      styles.baseButton,
-      {
-        [styles.primaryButtonColors]: variant === "primary",
-        [styles.secondaryButtonColors]: variant === "secondary",
-        [styles.outlineButtonColors]: variant === "outline",
-      },
-    ])}
-    {...rest}
-  >
-    {prefixIcon}
+}: PropsWithChildren<TButtonProps>) => {
+  const sizeVariants = {
+    sm: "gap-1 rounded-sm pt-1 pr-4 pb-1 pl-4",
+    md: "gap-3.5 rounded-2xl pt-3.5 pr-9 pb-3.5 pl-9",
+    lg: "",
+  };
 
-    <span>{children}</span>
+  const colorVariants = {
+    primary:
+      "bg-gray-50 dark:bg-gray-base text-gray-900 dark:text-gray-50 border-gray-50 hover:not-disabled:bg-gray-400 dark:hover:not-disabled:bg-gray-800 hover:not-disabled:border-gray-50",
+    secondary: "",
+    outline: "",
+  };
 
-    {postfixIcon}
-  </button>
-);
+  return (
+    <button
+      className={`${colorVariants[variant]} ${sizeVariants[size]} flex items-center border cursor-pointer disabled:cursor-not-allowed transition-colors duration-200 ease-out`}
+      {...rest}
+    >
+      {prefixIcon}
+
+      <span>{children}</span>
+
+      {postfixIcon}
+    </button>
+  );
+};

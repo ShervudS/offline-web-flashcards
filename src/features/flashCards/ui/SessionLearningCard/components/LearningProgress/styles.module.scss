@@ -3,23 +3,6 @@
     transform: translateX(100%);
   }
 }
-
-.learningProgressBar {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.8rem;
-  min-width: 30rem;
-}
-
-.progressBar {
-  position: relative;
-  width: 100%;
-  height: 1rem;
-  background-color: var(--third-color);
-  border-radius: 0.4rem;
-}
-
 .progress {
   --highlight-color: #42ab48;
   --pseudo-element-display: block; /* Enable animation */

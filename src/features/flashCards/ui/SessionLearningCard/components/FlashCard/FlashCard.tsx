@@ -7,8 +7,6 @@ import { buildWordCardHint } from "_features/flashCards/utils/helpers";
 import type { Nullable } from "_types/index";
 import type { TFlashCard } from "_entities/cards/types";
 
-import styles from "./styles.module.scss";
-
 type TFlashCardProps = {
   card: TFlashCard;
   handleAnswer: (arg0: any) => void;
@@ -55,15 +53,15 @@ export const FlashCard = ({ card, handleAnswer }: TFlashCardProps) => {
   };
 
   return (
-    <div className={styles.card}>
-      <div className={styles.question}>
+    <div className="min-w-md max-w-5xl w-full bg-gray-800 dark:bg-gray-400 p-8 rounded-2xl text-center">
+      <div className="text-3xl font-bold mb-6 text-gray-100 dark:text-gray-900 first-letter:uppercase">
         <h2>{card.question}</h2>
       </div>
 
-      <div className={styles.cardHint}>
+      <div className="tracking-widest">
         {visibleHintType === "letters" && (
           <>
-            <p>{buildWordCardHint(card.answer)}</p>
+            <p className="text-gray-100 dark:text-gray-900">{buildWordCardHint(card.answer)}</p>
 
             <button onClick={onShowHintOfFirstLetter}>
               Показать Первую букву
@@ -71,7 +69,7 @@ export const FlashCard = ({ card, handleAnswer }: TFlashCardProps) => {
           </>
         )}
         {visibleHintType === "firstLetter" && (
-          <p>
+          <p className="text-gray-100 dark:text-gray-900">
             {card.answer.at(0)} {buildWordCardHint(card.answer)}
           </p>
         )}
@@ -80,14 +78,14 @@ export const FlashCard = ({ card, handleAnswer }: TFlashCardProps) => {
         )}
       </div>
 
-      <div className={styles.buttons}>
+      <div className="flex justify-around mt-6">
         {isShowAnswer ? (
-          <div className={styles.answer}>
+          <div className="text-2xl italic mt-6 text-gray-100 dark:text-gray-900">
             <p>{card.answer}</p>
           </div>
         ) : (
           <button
-            className={`${styles.button} ${styles.showAnswer}`}
+            className="pt-4 pr-8 pb-4 pl-8 text-2xl rounded-lg border-none cursor-pointer transition-colors bg-blue-700 hover:bg-blue-600 "
             onClick={onShowAnswer}
           >
             Показать ответ
@@ -95,16 +93,16 @@ export const FlashCard = ({ card, handleAnswer }: TFlashCardProps) => {
         )}
       </div>
 
-      <div className={styles.cardAnswerActions}>
+      <div className="flex justify-between items-center gap-4">
         <button
-          className={`${styles.button} ${styles.wrong}`}
+          className="pt-4 pr-6 pb-4 pl-6 text-2xl rounded-lg border-none cursor-pointer transition-colors bg-red-700 hover:bg-red-600"
           onClick={() => onSubmit(false)}
         >
           Не помню
         </button>
 
         <button
-          className={`${styles.button} ${styles.correct}`}
+          className="pt-4 pr-6 pb-4 pl-6 text-2xl rounded-lg border-none cursor-pointer transition-colors bg-green-700 hover:bg-green-600"
           onClick={() => onSubmit(true)}
         >
           Помню

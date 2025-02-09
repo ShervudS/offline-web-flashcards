@@ -1,4 +1,4 @@
-import { InputHTMLAttributes } from "react";
+import { ChangeEvent, InputHTMLAttributes, useId } from "react";
 import { clsx } from "clsx";
 
 import styles from "./styles.module.scss";
@@ -7,7 +7,7 @@ type TInputControl = InputHTMLAttributes<HTMLInputElement> & {
   value?: string;
   label?: string;
   hintText?: string;
-  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
   validate?: (value: string) => string | null;
   onBlur?: () => void;
   disabled?: boolean;
@@ -26,6 +26,7 @@ export const InputControl = ({
   error = null,
   ...props
 }: TInputControl) => {
+  const inputId = useId();
   // const [error, setError] = useState<null | string>(null);
 
   const onBlur = () => {
@@ -37,32 +38,27 @@ export const InputControl = ({
   };
 
   return (
-    <label className={styles.control__label}>
-      <span className={styles.control__labelText}>{label}</span>
+    <div className="flex flex-col gap-1">
+      <label className= "text-gray-100 dark:text-gray-950 select-none" htmlFor={inputId}>
+        {label}
+      </label>
 
-      <div
-        className={clsx([
-          styles.control__inputWrapper,
-          { [styles.control__error]: Boolean(error) },
-          { [styles.control__disabled]: disabled },
-        ])}
-      >
-        <input
-          type={type}
-          value={value}
-          onChange={onChange}
-          onBlur={onBlur}
-          disabled={disabled}
-          className={styles.control__input}
-          {...props}
-        />
-      </div>
+      <input
+        id={inputId}
+        type={type}
+        value={value}
+        onChange={onChange}
+        onBlur={onBlur}
+        disabled={disabled}
+        className="block bg-gray-800 dark:bg-gray-600 pt-1 pr-3.5 pb-1 pl-3.5 rounded-md cursor-text border border-solid border-gray-100 dark:border-gray-950"
+        {...props}
+      />
 
       {(error || hintText) && (
-        <span className={styles.control__inputHintText}>
+        <span className="text-gray-50 text-lg font-normal">
           {error || hintText}
         </span>
       )}
-    </label>
+    </div>
   );
 };

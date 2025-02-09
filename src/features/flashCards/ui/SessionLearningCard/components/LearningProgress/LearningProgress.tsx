@@ -10,15 +10,15 @@ export const LearningProgress = ({
   amountCards,
 }: TLearningProgress) => {
   return (
-    <div className={styles.learningProgressBar}>
-      <div className={styles.progressBar}>
+    <div className="flex flex-col items-center gap-3 min-w-lg">
+      <div className="relative w-full h-4 bg-gray-800 dark:bg-gray-400 rounded-xl">
         <div
           className={styles.progress}
           style={{ width: `${(100 / amountCards) * currentPosotion}%` }}
         />
       </div>
 
-      <p>{`Завершено ${currentPosotion} / ${amountCards}`}</p>
+      <p className="text-xl text-gray-500">{`Завершено ${currentPosotion} / ${amountCards}`}</p>
     </div>
   );
 };

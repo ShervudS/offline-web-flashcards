@@ -2,6 +2,9 @@ import { useEffect, useState } from "react";
 
 import { WINDOW_MATH_MEDIA } from "_configs/index";
 
+import type { Nullable } from "_types/index";
+import { Button } from "_shared/Button";
+
 const STORAGE_THEME_KEY = "theme";
 const THEME_DATA_ATTR = "data-theme";
 const enum THEME {
@@ -10,7 +13,7 @@ const enum THEME {
 }
 
 export const ThemeButton = () => {
-  const [theme, setTheme] = useState<THEME | null>(null);
+  const [theme, setTheme] = useState<Nullable<THEME>>(null);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -37,5 +40,9 @@ export const ThemeButton = () => {
     );
   };
 
-  return <button onClick={toggleTheme}>Theme</button>;
+  return (
+    <Button onClick={toggleTheme} size="sm">
+      Theme
+    </Button>
+  );
 };
