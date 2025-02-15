@@ -165,7 +165,7 @@ export const buildBaseCardConfig: TBuildBaseCardCnfig = ({
 	question,
 }) => {
 	const curDateTime = Date.now();
-
+	
 	return {
 		answer,
 		question,

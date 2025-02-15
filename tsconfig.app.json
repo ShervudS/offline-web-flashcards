@@ -30,6 +30,7 @@
       "_shared/*": ["src/shared/*"],
       "_processes/*": ["src/processes/*"],
       "_hooks/*": ["src/hooks/*"],
+      "_utils/*": ["src/utils/*"],
       "_configs/*": ["src/configs/*"],
       "_types/*": ["src/types/*"],
       "_styles/*": ["src/styles/*"]

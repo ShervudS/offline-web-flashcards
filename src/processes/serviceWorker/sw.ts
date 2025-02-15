@@ -1,4 +1,4 @@
-const version = "v0.1.21";
+const version = "v0.2.0";
 
 const enum METHOD {
 	GET = "GET",

@@ -1,57 +1,92 @@
 import { FormEventHandler } from "react";
+import { useUnit } from "effector-react";
 
 import { InputControl } from "_shared/control/InputControl";
 import { Button } from "_shared/Button";
 
-import type { TCreateFlashCard } from "_entities/cards/types";
+import {
+  $answer,
+  $answerError,
+  $formDisabled,
+  $question,
+  $questionError,
+  answerChanged,
+  formSubmitted,
+  questionChanged,
+} from "./model";
 
-type TFlashCardForm = {
-	onSave: (arg0: TCreateFlashCard) => void;
-};
+// const FormControl = ({ name, ...rest }) => {
+//   const value = useStoreMap({
+//     store: $form,
+//     keys: [name],
+//     fn: (values) => values[name] ?? "",
+//   });
+//   return (
+//     <InputControl
+//       name={name}
+//       value={value}
+//       onChange={handleChangeFormField}
+//       {...rest}
+//     />
+//   );
+// };
 
-export const FlashCardForm = ({ onSave }: TFlashCardForm) => {
-	// const [errors, setErrors] = useState<null | Record<string, any>>(null);
+export const FlashCardForm = () => {
+  const [
+    question,
+    questionError,
+    changeQuestion,
+    answer,
+    answerError,
+    changeAnswer,
+    formDisabled,
+  ] = useUnit([
+    $question,
+    $questionError,
+    questionChanged,
+    $answer,
+    $answerError,
+    answerChanged,
+    $formDisabled,
+  ]);
 
-	const onSaveCard: FormEventHandler<HTMLFormElement> = (e) => {
-		let newFlashCard: Record<string, any> = {};
-		const formData = new FormData(e.currentTarget);
+  const onFormSubmit: FormEventHandler = (e) => {
+    e.preventDefault();
+    formSubmitted();
+  };
 
-		e.preventDefault();
+  return (
+    <form
+      onSubmit={onFormSubmit}
+      className="flex items-center flex-wrap gap-6 p-8"
+    >
+      <p>Create new flashcard</p>
 
-		for (let [key, value] of formData.entries()) {
-			/**
-			 * TODO:
-			 * Логика проверки на ошибки
-			 */
-			if (value) newFlashCard[key] = value;
-		}
-		onSave(newFlashCard as TCreateFlashCard);
-	};
+      <InputControl
+        value={question}
+        onChange={(e) => changeQuestion(e.target.value)}
+        disabled={formDisabled}
+        error={questionError}
+        name="question"
+        label="Question"
+        placeholder="Question"
+        required
+      />
 
-	return (
-		<form
-			onSubmit={onSaveCard}
-			className="flex items-center flex-wrap gap-6 p-8"
-		>
-			<p>Create new flashcard</p>
+      <InputControl
+        value={answer}
+        onChange={(e) => changeAnswer(e.target.value)}
+        disabled={formDisabled}
+        error={answerError}
+        name="question"
+        label="Question"
+        placeholder="Question"
+        required
+      />
 
-			<InputControl
-				name="question"
-				label="Question"
-				placeholder="Question"
-				// error={errors?.question}
-				required
-			/>
-
-			<InputControl
-				name="answer"
-				label="Answer"
-				placeholder="Answer"
-				// error={errors?.answer}
-				required
-			/>
-
-			<Button type="submit"> Save</Button>
-		</form>
-	);
+      <Button type="submit" isLoading={formDisabled}>
+        Save
+      </Button>
+    </form>
+  );
 };

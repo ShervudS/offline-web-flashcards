@@ -9,6 +9,7 @@ type TButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
   size?: "sm" | "md" | "lg";
   prefixIcon?: ReactElement;
   postfixIcon?: ReactElement;
+  isLoading?: boolean;
 };
 
 export const Button = ({
@@ -17,6 +18,7 @@ export const Button = ({
   postfixIcon,
   variant = "primary",
   size = "md",
+  isLoading,
   ...rest
 }: PropsWithChildren<TButtonProps>) => {
   const sizeVariants = {

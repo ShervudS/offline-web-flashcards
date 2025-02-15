@@ -86,3 +86,55 @@ video {
     padding-left: 1rem;
   }
 }
+
+@keyframes loading-progress {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.progress {
+  background-color: var(--color-green-500);
+
+  height: 100%;
+  border-radius: 0.4rem;
+  line-height: 1;
+
+  position: relative;
+  user-select: none;
+  overflow: hidden;
+
+  transition: width 0.3s ease-in 0s;
+
+  &::after {
+    content: " ";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 100%;
+    background-repeat: no-repeat;
+    background-image: var(
+      --custom-highlight-background,
+      linear-gradient(
+        90deg,
+        var(--color-green-500) 0%,
+        #42ab48 50%,
+        var(--color-green-500) 100%
+      )
+    );
+    transform: translateX(-100%);
+
+    animation-name: loading-progress;
+    animation-direction: normal;
+    animation-duration: 1.5s;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+  }
+
+  @media (prefers-reduced-motion) {
+    .progress {
+      display: none;
+    }
+  }
+}
