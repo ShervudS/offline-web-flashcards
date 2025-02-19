@@ -24,13 +24,8 @@ export const InputControl = ({
   ...props
 }: TInputControl) => {
   const inputId = useId();
-  // const [error, setError] = useState<null | string>(null);
 
   const onBlur = () => {
-    // if (validate) {
-    //   setError(validate(value));
-    // }
-
     onBlurInProps && onBlurInProps();
   };
 

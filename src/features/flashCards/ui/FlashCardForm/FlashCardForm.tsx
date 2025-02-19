@@ -15,74 +15,68 @@ import {
   questionChanged,
 } from "./model";
 
-// const FormControl = ({ name, ...rest }) => {
-//   const value = useStoreMap({
-//     store: $form,
-//     keys: [name],
-//     fn: (values) => values[name] ?? "",
-//   });
-//   return (
-//     <InputControl
-//       name={name}
-//       value={value}
-//       onChange={handleChangeFormField}
-//       {...rest}
-//     />
-//   );
-// };
-
-export const FlashCardForm = () => {
-  const [
-    question,
-    questionError,
-    changeQuestion,
-    answer,
-    answerError,
-    changeAnswer,
-    formDisabled,
-  ] = useUnit([
+const QuestionField = () => {
+  const [question, questionError, changeQuestion, formDisabled] = useUnit([
     $question,
     $questionError,
     questionChanged,
+    $formDisabled,
+  ]);
+
+  return (
+    <InputControl
+      value={question}
+      onChange={(e) => changeQuestion(e.target.value)}
+      disabled={formDisabled}
+      error={questionError}
+      name="question"
+      label="Question"
+      placeholder="Question"
+      required
+    />
+  );
+};
+
+const AnswerField = () => {
+  const [answer, answerError, changeAnswer, formDisabled] = useUnit([
     $answer,
     $answerError,
     answerChanged,
     $formDisabled,
   ]);
 
+  return (
+    <InputControl
+      value={answer}
+      onChange={(e) => changeAnswer(e.target.value)}
+      disabled={formDisabled}
+      error={answerError}
+      name="answer"
+      label="Answer"
+      placeholder="Answer"
+      required
+    />
+  );
+};
+
+export const FlashCardForm = () => {
+  const [formDisabled, onSubmit] = useUnit([$formDisabled, formSubmitted]);
+
   const onFormSubmit: FormEventHandler = (e) => {
     e.preventDefault();
-    formSubmitted();
+    onSubmit();
   };
 
   return (
     <form
       onSubmit={onFormSubmit}
-      className="flex items-center flex-wrap gap-6 p-8"
+      className="flex items-center flex-wrap gap-6 pt-8 pb-8"
     >
       <p>Create new flashcard</p>
 
-      <InputControl
-        value={question}
-        onChange={(e) => changeQuestion(e.target.value)}
-        disabled={formDisabled}
-        error={questionError}
-        name="question"
-        label="Question"
-        placeholder="Question"
-        required
-      />
+      <QuestionField />
 
-      <InputControl
-        value={answer}
-        onChange={(e) => changeAnswer(e.target.value)}
-        disabled={formDisabled}
-        error={answerError}
-        name="question"
-        label="Question"
-        placeholder="Question"
-        required
-      />
+      <AnswerField />
 
       <Button type="submit" isLoading={formDisabled}>
         Save

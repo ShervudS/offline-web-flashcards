@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 
+import { Button } from "_shared/Button";
+
 import { WINDOW_MATH_MEDIA } from "_configs/index";
 
 import type { Nullable } from "_types/index";
-import { Button } from "_shared/Button";
 
 const STORAGE_THEME_KEY = "theme";
 const THEME_DATA_ATTR = "data-theme";

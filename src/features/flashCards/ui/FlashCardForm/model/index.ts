@@ -1,6 +1,6 @@
-import { attach, combine, createEvent, createStore, sample } from "effector";
+import { combine, createEvent, createStore, sample } from "effector";
 
-import { createNewCardFx } from "_entities/cards/model";
+import { saveDataCardFx } from "_entities/cards/model";
 
 import { buildBaseCardConfig } from "_features/flashCards/utils/updateCard";
 import { isEmpty } from "_utils/strChecks";
@@ -11,11 +11,6 @@ export const enum ERROR_FIELD {
   EMPTY = "empty",
   INVALID = "invalid",
 }
-
-/**
- * Создание локальной копии эффекта
- */
-const createCardFx = attach({ effect: createNewCardFx });
 
 export const questionChanged = createEvent<string>();
 export const answerChanged = createEvent<string>();
@@ -63,9 +58,11 @@ sample({
 sample({
   clock: formSubmitted,
   source: { question: $question, answer: $answer },
-  filter: createCardFx.pending.map((pending) => !pending),
+  filter: saveDataCardFx.pending.map((pending) => !pending),
   fn: buildBaseCardConfig,
-  target: createCardFx,
+  target: saveDataCardFx,
 });
 
-$error.on(createCardFx.failData, (_, error) => error);
+$answer.reset(saveDataCardFx.done);
+$question.reset(saveDataCardFx.done);
+$error.on(saveDataCardFx.failData, (_, error) => error);

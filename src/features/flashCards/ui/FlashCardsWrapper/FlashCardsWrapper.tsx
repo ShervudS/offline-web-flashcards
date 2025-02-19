@@ -1,34 +1,18 @@
-import { useContext } from "react";
-
 import { CardsListPreview } from "../CardsListPreview";
-import { SessionLearningCard } from "../SessionLearningCard";
 import { FlashCardForm } from "../FlashCardForm";
-
-import { CardsContext } from "_entities/cards";
+import { SessionLearningCard } from "../SessionLearningCard";
 
 export const FlashCardsWrapper = () => {
-  const { cards, onRemoveFlashCard } = useContext(CardsContext);
-
   return (
     <div className="flex flex-col gap-9 items-baseline">
       <FlashCardForm />
 
-      {/* <div> */}
-      {/* <Button onClick={handlerPrevCard} disabled={!cards || !currentIndex}>
-          Вернуться
-        </Button>
-
-        <Button onClick={resetCurIndex} disabled={!currentIndex}>
-          Сбросить
-        </Button> */}
-      {/* </div> */}
-
-      {cards && <SessionLearningCard cards={cards} />}
+      <SessionLearningCard />
 
       <div className="w-full">
         <h2>All flashCards</h2>
 
-        <CardsListPreview cards={cards} onRemoveCard={onRemoveFlashCard} />
+        <CardsListPreview />
       </div>
     </div>
   );

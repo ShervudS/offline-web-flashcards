@@ -1,153 +1,186 @@
-import { createEvent, createStore } from "effector";
+import { combine, createEvent, createStore, sample } from "effector";
 
-import { TFlashCard } from "_entities/cards/types";
+import { $cards } from "_entities/cards/model";
 
-import { Nullable } from "_types/index";
+import { isNotEmptyArray } from "_utils/arrayChecks";
+
+import {
+  CARD_HINT,
+  type TCardHint,
+  type TFlashCard,
+} from "_entities/cards/types";
+import type { Nullable } from "_types/index";
+
+// const MSEC_FROM_SEC = 1000;
 
 export const startedSession = createEvent();
+export const retryedSession = createEvent();
+export const correctedAnswer = createEvent();
+export const uncorrectedAnswer = createEvent();
+export const showedHintOfAmountLettres = createEvent();
+export const showedHintOfFirstLetter = createEvent();
 
 export const $isStartedSession = createStore(false);
-export const $isRepeatCard = createStore(false);
 
 export const $cardQueue = createStore<TFlashCard[]>([]);
 export const $repeatQueue = createStore<TFlashCard[]>([]);
 export const $currentCard = createStore<Nullable<TFlashCard>>(null);
 
+export const $isRepeatCard = createStore(false);
+export const $hintType = createStore<TCardHint>(CARD_HINT.DEFAULT);
+export const $responseTime = createStore(0);
+
 export const $currentLearningIdx = createStore(0);
-export const $amountCardToLearn = createStore(0);
+export const $hasCardsToLearn = $cards.map((cards) => isNotEmptyArray(cards));
+export const $amountCardToLearn = $cards.map((cards) => cards.length);
+export const $isFinishSession = combine(
+  {
+    currentLearningIdx: $currentLearningIdx,
+    amountCardToLearn: $amountCardToLearn,
+  },
+  ({ currentLearningIdx, amountCardToLearn }) =>
+    amountCardToLearn === currentLearningIdx - 1
+);
 
-// import { createEvent, createStore, sample } from "effector";
-// import { updateCardLearningStatus } from "../utils/updateCard";
+$isStartedSession.on(startedSession, () => true);
+$hintType.on(showedHintOfAmountLettres, () => CARD_HINT.AMOUNT_LETTERS);
+$hintType.on(showedHintOfFirstLetter, () => CARD_HINT.FIRST_LETTER);
 
-// import type { TFlashCard } from "_entities/cards/types";
-// import type { Nullable } from "_types/index";
+$currentLearningIdx.reset(retryedSession);
 
-// // Создаем события
-// export const updateCardQueue = createEvent<TFlashCard[]>();
-// export const updateRepeatQueue = createEvent<TFlashCard[]>();
-// export const updateCurrentCard = createEvent<Nullable<TFlashCard>>();
-// export const setIsStartedSession = createEvent<boolean>();
-// export const setIsRepeatCard = createEvent<boolean>();
-// export const setCurrentLearningIndex = createEvent<number>();
-// export const handleResponse = createEvent<{
-//   responseTime: number;
-//   isCorrect: boolean;
-//   hintType: "letters" | "firstLetter" | "none";
-// }>();
 
-// // Создаем хранилища
-// export const $cardQueue = createStore<TFlashCard[]>([]).on(
-//   updateCardQueue,
-//   (_, queue) => queue
-// );
+/**
+ * TODO: Необходимо вынести 4е стора флага
+ * - карточек для изучения нет
+ * - Блок начала сессии изучения
+ * - Блок с сессией обучения
+ * - Финишная статистика сессии
+ */
 
-// export const $repeatQueue = createStore<TFlashCard[]>([]).on(
-//   updateRepeatQueue,
-//   (_, queue) => queue
-// );
+/**
+ * При запуске сессии берем из стора карточек, карточки и сохраняем их в очередь на изучение
+ * ps. Необходимо будет добавить фильтры
+ */
+sample({
+  clock: startedSession,
+  source: $cards,
+  target: $cardQueue,
+});
 
-// export const $currentCard = createStore<Nullable<TFlashCard>>(null).on(
-//   updateCurrentCard,
-//   (_, card) => card
-// );
+/**
+ * При запуске или сбросе сессии, берем карточку из очереди, игнорируя очередь повторени
+ */
+sample({
+  clock: [startedSession, retryedSession],
+  source: $cardQueue,
+  fn: (cardQueue) => cardQueue[0],
+  target: $currentCard,
+});
 
-// export const $isStartedSession = createStore(false).on(
-//   setIsStartedSession,
-//   (_, started) => started
-// );
+/**
+ * При НЕ ПРАВИЛЬНОМ ответе
+ * - Если эта карточка уже из очереди повторения, то сбрасываем кол-во повторений (до 0)
+ * - Добавляем карточку в очередь повторения
+ */
+sample({
+  clock: uncorrectedAnswer,
+  source: {
+    repeatQueue: $repeatQueue,
+    currentCard: $currentCard,
+    isRepeatCard: $isRepeatCard,
+  },
+  filter: ({ currentCard }) => Boolean(currentCard),
+  fn: ({ repeatQueue, currentCard, isRepeatCard }) => {
+    const newRepeatCard: TFlashCard = {
+      ...(currentCard as TFlashCard),
+      repetition: isRepeatCard ? 0 : currentCard!.repetition + 1,
+    };
 
-// export const $isRepeatCard = createStore(false).on(
-//   setIsRepeatCard,
-//   (_, isRepeat) => isRepeat
-// );
+    return [...repeatQueue, newRepeatCard];
+  },
+  target: $repeatQueue,
+});
 
-// export const $currentLearningIndex = createStore(0).on(
-//   setCurrentLearningIndex,
-//   (_, index) => index
-// );
+/**
+ * Обновляем индекс карточки, при ЛЮБОМ ответе, только если это не при ПОВТОРЕ карточки
+ */
+sample({
+  clock: [correctedAnswer, uncorrectedAnswer],
+  source: $currentLearningIdx,
+  filter: $isRepeatCard.map((isRepeatCard) => !isRepeatCard),
+  fn: (idx) => idx + 1,
+  target: $currentLearningIdx,
+});
 
-// // Состояния для управления количеством карт для обучения
-// export const $amountCardToLearn = createStore(0);
+/**
+ * При правильном ответе
+ * - TODO: Добавить проверку на повторение карточки из очереди
+ */
+sample({
+  clock: correctedAnswer,
+  source: { cardQueue: $cardQueue, currentIdx: $currentLearningIdx },
+  filter: $isFinishSession,
+  fn: ({ cardQueue, currentIdx }) => cardQueue[currentIdx],
+  target: $currentCard,
+});
 
-// // Логика для обновления текущей карточки
-// const updateCurrentCardLogic = sample({
-//   source: [$cardQueue, $repeatQueue],
-//   clock: [$cardQueue, $repeatQueue],
-//   fn: ([cardQueue, repeatQueue]) => {
-//     if (cardQueue.length === 0 && repeatQueue.length === 0) {
-//       return null;
-//     }
+/**
+ * При вызове любого ответа, сбрасываем тип подсказки
+ */
+sample({
+  clock: [correctedAnswer, uncorrectedAnswer],
+  fn: () => CARD_HINT.DEFAULT,
+  target: $hintType,
+});
 
-//     let nextCard: Nullable<TFlashCard> = null;
-//     let updatedRepeatQueue = [...repeatQueue];
-//     let updatedCardQueue = [...cardQueue];
-//     let isRepeatCard = false;
-
-//     if (repeatQueue.length > 0 && cardQueue.length % 3 === 0) {
-//       nextCard = repeatQueue[0];
-//       updatedRepeatQueue = repeatQueue.slice(1);
-//       isRepeatCard = true;
-//     } else {
-//       nextCard = cardQueue[0];
-//       updatedCardQueue = cardQueue.slice(1);
-//       isRepeatCard = false;
-//     }
-
-//     // Обновляем состояния
-//     updateRepeatQueue(updatedRepeatQueue);
-//     updateCardQueue(updatedCardQueue);
-//     setIsRepeatCard(isRepeatCard);
-//     updateCurrentCard(nextCard);
-
-//     return nextCard;
-//   },
-// });
-
-// // Обработчик ответов
-// sample({
-//   source: [$currentCard, $isRepeatCard, $currentLearningIndex],
-//   clock: handleResponse,
-//   fn: (
-//     [currentCard, isRepeatCard, currentLearningIndex],
-//     { responseTime, isCorrect, hintType }
-//   ) => {
-//     if (!currentCard) return;
-
-//     let updatedRepeatQueue = $repeatQueue.getState();
-//     let recallQuality = isCorrect
-//       ? Math.max(0, (5 - responseTime / 10) * 5)
-//       : 1;
-
-//     if (isCorrect) {
-//       // Обновляем карточку
-//       console.log(
-//         "updateCardLearningStatus >>",
-//         updateCardLearningStatus({
-//           card: currentCard,
-//           responseTime,
-//           isCorrect,
-//           hintType,
-//           isRepeatCard,
-//         })
-//       );
-//     } else {
-//       updatedRepeatQueue = [...updatedRepeatQueue, currentCard];
-//       updateRepeatQueue(updatedRepeatQueue);
-//     }
-
-//     setCurrentLearningIndex(currentLearningIndex + 1);
-//     updateCurrentCardLogic(); // Обновляем текущую карточку
-//   },
-// });
-
-// // Логика для старта сессии
-// export const onStartSession = () => {
-//   setIsStartedSession(true);
-//   updateCurrentCardLogic();
-// };
-
-// // Логика для повторного начала сессии
-// export const onRetrySession = () => {
-//   setCurrentLearningIndex(0);
-//   updateCurrentCardLogic();
-// };
+/**
+ * Добавить новый коеффициент, который показывает, через какое кол-во ответов показывается карточка из очереди повтора
+ * Добавить коеф на колличество повторений карточек из очереди повторений, сбрасывается при неправильном ответе
+ *
+ * Happy pass
+ * - isStartedSession переводится в положение true
+ * - из queue берется первая карточка
+ * - response timer устанавливается Date now
+ *
+ * Обновление текущей карточки
+ * - Проверяем коефф_очереди_повтора === 0
+ * -    Проверяется есть ли в очереде повтора карточки
+ * -        Берется карточка из очереди
+ * -        isRepeatCard true
+ * - Берем карточку из обычной очереди
+ *
+ * - Нажатие sussess
+ * - responseTime устанавливается время Date now
+ * - Проверяется что это карточка isRepeatCard
+ * -    Да
+ * -       Если счетчик колва повторений < коефф_повторения то
+ * -          Да
+ * -             +1 к кол-ву повторении
+ * -             Добавляется в очередь повторений
+ *            Нет
+ * -            обновляется индекс
+ * -    нет
+ *          Рассчета коеээ_еффективности
+ * -        обновляется индекс
+ * - Обновляется текущая карточка
+ * - response timer устанавливается Date now
+ *
+ * - Нажатие на wrongAnswer
+ * - responseTime устанавливается время Date now
+ * - Проверяется что это карточка isRepeatCard
+ * -    Да
+ * -       Если счетчик колва повторений < коефф_повторения то
+ * -          Да
+ * -             +1 к кол-ву повторении
+ * -             Добавляется в очередь повторений
+ *            Нет
+ * -            обновляется индекс
+ * -    нет
+ * -        обновляется индекс
+ * - Обновляется текущая карточка
+ * - response timer устанавливается Date now
+ *
+ * * Если карточка взялась из очереди повтора
+ * - необходимо обновить очередь на slice(1, -1)
+ *   (удалить первый элемент, который мы взяли)
+ */
