@@ -6,29 +6,29 @@ import { FlashCard } from "./components/FlashCard";
 
 import {
   $amountCardToLearn,
-  $currentCard,
   $currentLearningIdx,
   $hasCardsToLearn,
-  $isFinishSession,
-  $isStartedSession,
+  $isStudyAvailable,
+  $isVisibleStudySession,
+  $studyResultsVisible,
   retryedSession,
   startedSession,
 } from "./model";
 
 export const SessionLearningCard = () => {
   const [
-    currentCard,
-    isStartedSession,
-    isFinishSession,
+    isStudyAvailable,
+    isVisibleStudySession,
+    studyResultsVisible,
     onStartSession,
     currentLearningIdx,
     amountCardToLearn,
     hasCardsToLearn,
     onRetrySession,
   ] = useUnit([
-    $currentCard,
-    $isStartedSession,
-    $isFinishSession,
+    $isStudyAvailable,
+    $isVisibleStudySession,
+    $studyResultsVisible,
     startedSession,
     $currentLearningIdx,
     $amountCardToLearn,
@@ -44,13 +44,13 @@ export const SessionLearningCard = () => {
         </div>
       )}
 
-      {!isStartedSession && !isFinishSession && (
+      {isStudyAvailable && (
         <div>
           <Button onClick={onStartSession}>Начать изучать</Button>
         </div>
       )}
 
-      {isStartedSession && !isFinishSession && currentCard && (
+      {isVisibleStudySession && (
         <>
           <div className="flex gap-2 items-center">
             {/* <Button
@@ -72,7 +72,7 @@ export const SessionLearningCard = () => {
         </>
       )}
 
-      {isStartedSession && isFinishSession && (
+      {studyResultsVisible && (
         <div className="min-w-md max-w-5xl w-full bg-gray-700  dark:bg-gray-400 p-8 rounded-2xl flex flex-col justify-between items-center min-h-50">
           <p className="text-gray-100 dark:text-gray-800">
             Всего изучено карточек: {amountCardToLearn}

@@ -4,58 +4,89 @@ import { $cards } from "_entities/cards/model";
 
 import { isNotEmptyArray } from "_utils/arrayChecks";
 
-import {
-  CARD_HINT,
-  type TCardHint,
-  type TFlashCard,
-} from "_entities/cards/types";
+import { type TFlashCard } from "_entities/cards/types";
 import type { Nullable } from "_types/index";
+import { $card } from "../components/FlashCard/model";
+
+/**
+ * Интервал для показа карточки из очереди повторения
+ */
+const REPEAT_CARD_INTERVAL = 3;
+/**
+ * Кол-во раз для повторения карточки из очереди повторения
+ */
+const REPEAT_CARD_COUNT = 3;
 
 // const MSEC_FROM_SEC = 1000;
+//   const responseTimeSec = Math.floor(
+//     (Date.now() - startTimeRef.current) / MSEC_FROM_SEC
+//   );
 
 export const startedSession = createEvent();
 export const retryedSession = createEvent();
 export const correctedAnswer = createEvent();
-export const uncorrectedAnswer = createEvent();
-export const showedHintOfAmountLettres = createEvent();
-export const showedHintOfFirstLetter = createEvent();
+export const incorrectedAnswer = createEvent();
 
 export const $isStartedSession = createStore(false);
+$isStartedSession.on(startedSession, () => true);
 
 export const $cardQueue = createStore<TFlashCard[]>([]);
 export const $repeatQueue = createStore<TFlashCard[]>([]);
 export const $currentCard = createStore<Nullable<TFlashCard>>(null);
 
 export const $isRepeatCard = createStore(false);
-export const $hintType = createStore<TCardHint>(CARD_HINT.DEFAULT);
-export const $responseTime = createStore(0);
 
 export const $currentLearningIdx = createStore(0);
-export const $hasCardsToLearn = $cards.map((cards) => isNotEmptyArray(cards));
+$currentLearningIdx.reset(retryedSession);
+
 export const $amountCardToLearn = $cards.map((cards) => cards.length);
-export const $isFinishSession = combine(
+
+const $amountShowCardsFromQueue = createStore(0);
+
+/**
+ * Проверка на существование очереди карточек для изучения
+ */
+export const $hasCardsToLearn = $cards.map((cards) => isNotEmptyArray(cards));
+
+const $isFinishSession = combine(
   {
     currentLearningIdx: $currentLearningIdx,
     amountCardToLearn: $amountCardToLearn,
   },
   ({ currentLearningIdx, amountCardToLearn }) =>
-    amountCardToLearn === currentLearningIdx - 1
+    amountCardToLearn === currentLearningIdx
 );
 
-$isStartedSession.on(startedSession, () => true);
-$hintType.on(showedHintOfAmountLettres, () => CARD_HINT.AMOUNT_LETTERS);
-$hintType.on(showedHintOfFirstLetter, () => CARD_HINT.FIRST_LETTER);
-
-$currentLearningIdx.reset(retryedSession);
-
+/**
+ * Отображение блока с запуском сессии изучения карточек
+ */
+export const $isStudyAvailable = combine(
+  { isStartedSession: $isStartedSession, isFinishSession: $isFinishSession },
+  ({ isStartedSession, isFinishSession }) =>
+    !isStartedSession && !isFinishSession
+);
 
 /**
- * TODO: Необходимо вынести 4е стора флага
- * - карточек для изучения нет
- * - Блок начала сессии изучения
- * - Блок с сессией обучения
- * - Финишная статистика сессии
+ * Отображение блока изучения
+ * Current card + Progress Bar
  */
+export const $isVisibleStudySession = combine(
+  {
+    isStartedSession: $isStartedSession,
+    isFinishSession: $isFinishSession,
+    currentCard: $currentCard,
+  },
+  ({ isStartedSession, isFinishSession, currentCard }) =>
+    isStartedSession && !isFinishSession && currentCard
+);
+
+/**
+ * Отображение итоговой статистики сессии
+ */
+export const $studyResultsVisible = combine(
+  { isStartedSession: $isStartedSession, isFinishSession: $isFinishSession },
+  ({ isStartedSession, isFinishSession }) => isStartedSession && isFinishSession
+);
 
 /**
  * При запуске сессии берем из стора карточек, карточки и сохраняем их в очередь на изучение
@@ -68,7 +99,7 @@ sample({
 });
 
 /**
- * При запуске или сбросе сессии, берем карточку из очереди, игнорируя очередь повторени
+ * При запуске или сбросе сессии, берем карточку из очереди изучения, игнорируя очередь повторени
  */
 sample({
   clock: [startedSession, retryedSession],
@@ -78,109 +109,40 @@ sample({
 });
 
 /**
- * При НЕ ПРАВИЛЬНОМ ответе
- * - Если эта карточка уже из очереди повторения, то сбрасываем кол-во повторений (до 0)
- * - Добавляем карточку в очередь повторения
+ * При каждом ответе, если это карточка из основной очереди, увеличиваем счетчик показа из обычной очереди
  */
 sample({
-  clock: uncorrectedAnswer,
-  source: {
-    repeatQueue: $repeatQueue,
-    currentCard: $currentCard,
-    isRepeatCard: $isRepeatCard,
-  },
-  filter: ({ currentCard }) => Boolean(currentCard),
-  fn: ({ repeatQueue, currentCard, isRepeatCard }) => {
-    const newRepeatCard: TFlashCard = {
-      ...(currentCard as TFlashCard),
-      repetition: isRepeatCard ? 0 : currentCard!.repetition + 1,
-    };
-
-    return [...repeatQueue, newRepeatCard];
-  },
-  target: $repeatQueue,
+  clock: [startedSession, retryedSession],
+  source: $amountShowCardsFromQueue,
+  filter: $isRepeatCard.map((isRepeatCard) => !isRepeatCard),
+  fn: (amountShowCardsFromQueue) => amountShowCardsFromQueue + 1,
+  target: $amountShowCardsFromQueue,
 });
 
 /**
- * Обновляем индекс карточки, при ЛЮБОМ ответе, только если это не при ПОВТОРЕ карточки
+ * При ЛЮБОМ ответе увеличиваем текущий индекс на 1, если только не карточка повторения, после ошибки
  */
 sample({
-  clock: [correctedAnswer, uncorrectedAnswer],
+  clock: [correctedAnswer, incorrectedAnswer],
   source: $currentLearningIdx,
   filter: $isRepeatCard.map((isRepeatCard) => !isRepeatCard),
-  fn: (idx) => idx + 1,
+  fn: (currentLearningIdx) => currentLearningIdx + 1,
   target: $currentLearningIdx,
 });
 
 /**
- * При правильном ответе
- * - TODO: Добавить проверку на повторение карточки из очереди
+ * При ЛЮБОМ ответе обновляем текущую карточку из очереди изучения
  */
 sample({
-  clock: correctedAnswer,
-  source: { cardQueue: $cardQueue, currentIdx: $currentLearningIdx },
-  filter: $isFinishSession,
-  fn: ({ cardQueue, currentIdx }) => cardQueue[currentIdx],
+  clock: [correctedAnswer, incorrectedAnswer],
+  source: { cardQueue: $cardQueue, currentLearningIdx: $currentLearningIdx },
+  fn: ({ cardQueue, currentLearningIdx }) => {
+    return cardQueue[currentLearningIdx];
+  },
   target: $currentCard,
 });
 
-/**
- * При вызове любого ответа, сбрасываем тип подсказки
- */
 sample({
-  clock: [correctedAnswer, uncorrectedAnswer],
-  fn: () => CARD_HINT.DEFAULT,
-  target: $hintType,
+  clock: $currentCard,
+  target: $card,
 });
-
-/**
- * Добавить новый коеффициент, который показывает, через какое кол-во ответов показывается карточка из очереди повтора
- * Добавить коеф на колличество повторений карточек из очереди повторений, сбрасывается при неправильном ответе
- *
- * Happy pass
- * - isStartedSession переводится в положение true
- * - из queue берется первая карточка
- * - response timer устанавливается Date now
- *
- * Обновление текущей карточки
- * - Проверяем коефф_очереди_повтора === 0
- * -    Проверяется есть ли в очереде повтора карточки
- * -        Берется карточка из очереди
- * -        isRepeatCard true
- * - Берем карточку из обычной очереди
- *
- * - Нажатие sussess
- * - responseTime устанавливается время Date now
- * - Проверяется что это карточка isRepeatCard
- * -    Да
- * -       Если счетчик колва повторений < коефф_повторения то
- * -          Да
- * -             +1 к кол-ву повторении
- * -             Добавляется в очередь повторений
- *            Нет
- * -            обновляется индекс
- * -    нет
- *          Рассчета коеээ_еффективности
- * -        обновляется индекс
- * - Обновляется текущая карточка
- * - response timer устанавливается Date now
- *
- * - Нажатие на wrongAnswer
- * - responseTime устанавливается время Date now
- * - Проверяется что это карточка isRepeatCard
- * -    Да
- * -       Если счетчик колва повторений < коефф_повторения то
- * -          Да
- * -             +1 к кол-ву повторении
- * -             Добавляется в очередь повторений
- *            Нет
- * -            обновляется индекс
- * -    нет
- * -        обновляется индекс
- * - Обновляется текущая карточка
- * - response timer устанавливается Date now
- *
- * * Если карточка взялась из очереди повтора
- * - необходимо обновить очередь на slice(1, -1)
- *   (удалить первый элемент, который мы взяли)
- */

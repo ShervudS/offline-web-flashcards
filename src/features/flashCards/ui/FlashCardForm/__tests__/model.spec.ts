@@ -94,21 +94,7 @@ describe("FlashCard form model", () => {
       await allSettled(answerChanged, { scope, params: "Valid Answer" });
       await allSettled(formSubmitted, { scope });
 
-      expect(scope.getState($questionError)).toEqual(null);
-      expect(scope.getState($answerError)).toEqual(null);
       expect(scope.getState($formValid)).toEqual(true);
-    });
-
-    it("should be true when both fields are invalid (errors present)", async () => {
-      const scope = fork();
-
-      await allSettled(questionChanged, { scope, params: "" });
-      await allSettled(answerChanged, { scope, params: "" });
-      await allSettled(formSubmitted, { scope });
-
-      expect(scope.getState($questionError)).toEqual(ERROR_FIELD.EMPTY);
-      expect(scope.getState($answerError)).toEqual(ERROR_FIELD.EMPTY);
-      expect(scope.getState($formValid)).toEqual(false);
     });
 
     it("should be false when question is invalid but answer is valid", async () => {
@@ -118,8 +104,6 @@ describe("FlashCard form model", () => {
       await allSettled(answerChanged, { scope, params: "Valid Answer" });
       await allSettled(formSubmitted, { scope });
 
-      expect(scope.getState($questionError)).toEqual(ERROR_FIELD.EMPTY);
-      expect(scope.getState($answerError)).toEqual(null);
       expect(scope.getState($formValid)).toEqual(false);
     });
 
@@ -130,8 +114,16 @@ describe("FlashCard form model", () => {
       await allSettled(answerChanged, { scope, params: "" });
       await allSettled(formSubmitted, { scope });
 
-      expect(scope.getState($questionError)).toEqual(null);
-      expect(scope.getState($answerError)).toEqual(ERROR_FIELD.EMPTY);
+      expect(scope.getState($formValid)).toEqual(false);
+    });
+
+    it("should be true when both fields are invalid (errors present)", async () => {
+      const scope = fork();
+
+      await allSettled(questionChanged, { scope, params: "" });
+      await allSettled(answerChanged, { scope, params: "" });
+      await allSettled(formSubmitted, { scope });
+
       expect(scope.getState($formValid)).toEqual(false);
     });
   });

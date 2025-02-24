@@ -1,37 +1,42 @@
 import { useUnit } from "effector-react";
 
+import {correctedAnswer, incorrectedAnswer} from "../../model";
 import {
-  $currentCard,
-  $hintType,
-  correctedAnswer,
+  $card,
+  $isVisibleAmountLetters,
+  $isVisibleBtnOnShowAmounLetters,
+  $isVisibleFirstLetter,
+  answeredCard,
   showedHintOfAmountLettres,
   showedHintOfFirstLetter,
-  uncorrectedAnswer,
-} from "../../model";
+} from "./model";
 
 import { useBoolean } from "_hooks/useBoolean";
 
 import { buildWordCardHint } from "_features/flashCards/utils/helpers";
 
 export const FlashCard = () => {
-  // const [visibleHintType, setVisibleHintType] =
-  //   useState<Nullable<"letters" | "firstLetter">>(null);
-  // const startTimeRef = useRef(0);
-
   const [
     card,
-    hintType,
-    onUncorrect,
-    onCorrect,
-    onShowHintOfAmountLetters,
+    isVisibleBtnOnShowAmounLetters,
+    isVisibleAmountLetters,
+    isVisibleFirstLetter,
+    onShowHintOfAmountLettres,
     onShowHintOfFirstLetter,
+    onAnswer,
   ] = useUnit([
-    $currentCard,
-    $hintType,
-    uncorrectedAnswer,
-    correctedAnswer,
+    $card,
+    $isVisibleBtnOnShowAmounLetters,
+    $isVisibleAmountLetters,
+    $isVisibleFirstLetter,
     showedHintOfAmountLettres,
     showedHintOfFirstLetter,
+    answeredCard,
+  ]);
+
+  const [onIncorrect, onCorrect] = useUnit([
+    incorrectedAnswer,
+    correctedAnswer,
   ]);
 
   const {
@@ -40,39 +45,14 @@ export const FlashCard = () => {
     setFalse: onHideAnswer,
   } = useBoolean();
 
-  // useEffect(() => {
-  //   startTimeRef.current = Date.now();
-  // }, [card.id]);
-
-  // const onShowHintOfLength = () => {
-  //   setVisibleHintType("letters");
-  // };
-
-  // const onShowHintOfFirstLetter = () => {
-  //   setVisibleHintType("firstLetter");
-  // };
-
-  // const onSubmit = (isCorrect: boolean) => {
-  //   const responseTimeSec = Math.floor(
-  //     (Date.now() - startTimeRef.current) / MSEC_FROM_SEC
-  //   );
-
-  //   onHideAnswer();
-  //   setVisibleHintType(null);
-
-  //   handleAnswer({
-  //     responseTime: responseTimeSec,
-  //     isCorrect,
-  //     hintType: visibleHintType ?? "none",
-  //   });
-  // };
-
-  const onUncorrectAnswer = () => {
-    onUncorrect();
+  const onIncorrectAnswer = () => {
+    onAnswer();
+    onIncorrect();
     onHideAnswer();
   };
 
   const onCorrectAnswer = () => {
+    onAnswer();
     onCorrect();
     onHideAnswer();
   };
@@ -84,7 +64,12 @@ export const FlashCard = () => {
       </div>
 
       <div className="tracking-widest">
-        {hintType === "letters" && (
+        {isVisibleBtnOnShowAmounLetters && (
+          <button onClick={onShowHintOfAmountLettres}>
+            Показать кол-во букв
+          </button>
+        )}
+        {isVisibleAmountLetters && (
           <>
             <p className="text-gray-100 dark:text-gray-900">
               {buildWordCardHint(card?.answer || "")}
@@ -95,15 +80,10 @@ export const FlashCard = () => {
             </button>
           </>
         )}
-        {hintType === "firstLetter" && (
+        {isVisibleFirstLetter && (
           <p className="text-gray-100 dark:text-gray-900">
             {card?.answer.at(0)} {buildWordCardHint(card?.answer || "")}
           </p>
-        )}
-        {!hintType && (
-          <button onClick={onShowHintOfAmountLetters}>
-            Показать кол-во букв
-          </button>
         )}
       </div>
 
@@ -125,7 +105,7 @@ export const FlashCard = () => {
       <div className="flex justify-between items-center gap-4">
         <button
           className="pt-4 pr-6 pb-4 pl-6 text-2xl rounded-lg border-none cursor-pointer transition-colors bg-red-700 hover:bg-red-600"
-          onClick={onUncorrectAnswer}
+          onClick={onIncorrectAnswer}
         >
           Не помню
         </button>

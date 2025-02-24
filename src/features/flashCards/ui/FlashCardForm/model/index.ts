@@ -7,19 +7,21 @@ import { isEmpty } from "_utils/strChecks";
 
 import { Nullable } from "_types/index";
 
-export const enum ERROR_FIELD {
-  EMPTY = "empty",
-  INVALID = "invalid",
-}
+export const ERROR_FIELD = {
+  EMPTY: "empty",
+  INVALID: "invalid",
+} as const;
+
+export type TErrorField = (typeof ERROR_FIELD)[keyof typeof ERROR_FIELD];
 
 export const questionChanged = createEvent<string>();
 export const answerChanged = createEvent<string>();
 export const formSubmitted = createEvent();
 
 export const $question = createStore("");
-export const $questionError = createStore<Nullable<ERROR_FIELD>>(null);
+export const $questionError = createStore<Nullable<TErrorField>>(null);
 export const $answer = createStore("");
-export const $answerError = createStore<Nullable<ERROR_FIELD>>(null);
+export const $answerError = createStore<Nullable<TErrorField>>(null);
 
 export const $formDisabled = createStore(false);
 export const $error = createStore<Nullable<any>>(null);
