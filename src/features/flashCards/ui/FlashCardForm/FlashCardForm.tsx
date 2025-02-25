@@ -70,9 +70,11 @@ export const FlashCardForm = () => {
   return (
     <form
       onSubmit={onFormSubmit}
-      className="flex items-center flex-wrap gap-6 pt-8 pb-8"
+      className="flex flex-col flex-wrap gap-2 pt-2 pb-2 sm:flex-row sm:items-center md:gap-4 md:pb-4 md:pt-4 lg:gap-6 lg:pb-8 lg:pt-8"
     >
-      <p>Create new flashcard</p>
+      <h3 className="text-3xl font-bold text-gray-50 dark:text-gray-900">
+        Create new flashcard
+      </h3>
 
       <QuestionField />
 

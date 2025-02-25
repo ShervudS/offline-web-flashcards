@@ -27,7 +27,6 @@
 ::backdrop,
 ::file-selector-button {
   box-sizing: border-box;
-  border: 0 solid;
 }
 
 h1,

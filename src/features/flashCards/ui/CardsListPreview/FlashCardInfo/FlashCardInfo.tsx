@@ -1,7 +1,7 @@
 import type { TFlashCard } from "_entities/cards/types";
 
 type TFlashCardInfo = Pick<TFlashCard, "answer" | "question" | "ef" | "id"> & {
-  onRemove: (removeCard: any) => any;
+  onRemove: (removeCardId: TFlashCard["id"]) => any;
 };
 
 export const FlashCardInfo = ({
@@ -11,28 +11,30 @@ export const FlashCardInfo = ({
   question,
   onRemove,
 }: TFlashCardInfo) => {
-  const normalizedEf = Math.min(Math.max(ef, 1.3), 5);
-
   const onClickToRemove = () => {
     onRemove(id);
   };
 
   return (
-    <div className="flex flex-col p-8 rounded-2xl bg-gray-800 dark:bg-gray-400">
-      <button onClick={onClickToRemove}>X</button>
+    <div className="flex flex-col p-2 rounded-2xl relative border border-solid border-gray-500 dark:border-gray-400 bg-gray-900 dark:bg-gray-200 md:p-4 lg:p-8">
+      <button
+        onClick={onClickToRemove}
+        className="absolute top-3 right-3 cursor-pointer text-gray-500 lg:top-5 lg:right-5"
+      >
+        X
+      </button>
 
-      <div>
-        <p className="text-5xl font-bold text-gray-50 first-letter:uppercase">
-          {answer}
-        </p>
-        <p className="text-2xl text-gray-300">{question}</p>
-      </div>
+      <p className="text-3xl font-bold text-gray-50 dark:text-gray-900 text-center first-letter:uppercase truncate lg:text-4xl">
+        {answer}
+      </p>
 
-      <div className="text-3xl font-bold mt-4 p-4 rounded-xl text-gray-50">
-        EF: {normalizedEf.toFixed(2)}
-      </div>
+      <p className="text-2xl text-center text-gray-400 dark:text-gray-700 truncate lg:text-3xl">
+        {question}
+      </p>
 
-      <div className="w-full h-4 rounded-lg mt-6" />
+      <p className="text-2xl font-bold mt-4 text-gray-50 dark:text-gray-800 lg:text-3xl">
+        {`EF: ${Math.min(Math.max(ef, 1.3), 5).toFixed(2)}`}
+      </p>
     </div>
   );
 };

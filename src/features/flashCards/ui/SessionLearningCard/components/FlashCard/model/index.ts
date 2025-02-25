@@ -1,4 +1,4 @@
-import { createEvent, createStore, sample } from "effector";
+import { createEvent, createStore } from "effector";
 
 import {
   CARD_HINT,
@@ -16,7 +16,6 @@ export const $card = createStore<Nullable<TFlashCard>>(null);
 export const $hintType = createStore<TCardHint>(CARD_HINT.DEFAULT);
 export const $showTime = createStore(0);
 export const $responseTime = createStore(0);
-
 
 $hintType.on(showedHintOfAmountLettres, () => CARD_HINT.AMOUNT_LETTERS);
 $hintType.on(showedHintOfFirstLetter, () => CARD_HINT.FIRST_LETTER);

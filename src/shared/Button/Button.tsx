@@ -23,7 +23,7 @@ export const Button = ({
 }: PropsWithChildren<TButtonProps>) => {
   const sizeVariants = {
     sm: "gap-1 rounded-sm pt-1 pr-4 pb-1 pl-4",
-    md: "gap-3.5 rounded-2xl pt-3.5 pr-9 pb-3.5 pl-9",
+    md: "gap-1 rounded-xl pt-2 pr-1.5 pb-2 pl-1.5 lg:gap-3.5 lg:rounded-2xl lg:pt-3.5 lg:pr-9 lg:pb-3.5 lg:pl-9",
     lg: "",
   };
 

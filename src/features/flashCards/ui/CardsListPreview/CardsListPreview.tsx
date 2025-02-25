@@ -8,7 +8,7 @@ export const CardsListPreview = () => {
   const removeCard = useUnit(removedCard);
 
   return (
-    <div className="w-full grid gap-9 grid-cols-[repeat(auto-fill,minmax(min(20rem,100%),1fr))]">
+    <div className="w-full grid gap-2 grid-cols-[repeat(auto-fill,minmax(min(20rem,100%),1fr))] md:gap-5 lg:gap-9">
       {useList($cards, ({ id, ef, question, answer }) => (
         <FlashCardInfo
           id={id}

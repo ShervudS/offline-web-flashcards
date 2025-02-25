@@ -52,28 +52,17 @@ export const SessionLearningCard = () => {
 
       {isVisibleStudySession && (
         <>
-          <div className="flex gap-2 items-center">
-            {/* <Button
-            // onClick={handlerPrevCard}
-            // disabled={!cards || !currentIndex}
-            >
-              Вернуться
-            </Button> */}
-
-            <LearningProgress
-              currentPosotion={currentLearningIdx}
-              amountCards={amountCardToLearn}
-            />
-            {/* 
-            <Button>Сбросить</Button> */}
-          </div>
+          <LearningProgress
+            currentPosotion={currentLearningIdx}
+            amountCards={amountCardToLearn}
+          />
 
           <FlashCard />
         </>
       )}
 
       {studyResultsVisible && (
-        <div className="min-w-md max-w-5xl w-full bg-gray-700  dark:bg-gray-400 p-8 rounded-2xl flex flex-col justify-between items-center min-h-50">
+        <div className="max-w-5xl w-full bg-gray-700  dark:bg-gray-400 p-8 rounded-2xl flex flex-col justify-between items-center min-h-50">
           <p className="text-gray-100 dark:text-gray-800">
             Всего изучено карточек: {amountCardToLearn}
           </p>

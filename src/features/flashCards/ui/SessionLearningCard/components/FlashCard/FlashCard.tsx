@@ -58,7 +58,7 @@ export const FlashCard = () => {
   };
 
   return (
-    <div className="min-w-md max-w-5xl w-full bg-gray-800 dark:bg-gray-400 p-8 rounded-2xl text-center">
+    <div className="flex flex-col gap-2 max-w-5xl w-full bg-gray-800 dark:bg-gray-400 p-4 rounded-2xl text-center lg:p-8 lg:gap-8">
       <div className="text-3xl font-bold mb-6 text-gray-100 dark:text-gray-900 first-letter:uppercase">
         <h2>{card?.question}</h2>
       </div>
@@ -94,7 +94,7 @@ export const FlashCard = () => {
           </div>
         ) : (
           <button
-            className="pt-4 pr-8 pb-4 pl-8 text-2xl rounded-lg border-none cursor-pointer transition-colors bg-blue-700 hover:bg-blue-600 "
+            className="pt-1 pr-2 pb-1 pl-2 text-xl lg:pt-4 lg:pr-6 lg:pb-4 lg:pl-6 lg:text-2xl  rounded-lg border-none cursor-pointer transition-colors bg-blue-700 hover:bg-blue-600 "
             onClick={onShowAnswer}
           >
             Показать ответ
@@ -104,14 +104,14 @@ export const FlashCard = () => {
 
       <div className="flex justify-between items-center gap-4">
         <button
-          className="pt-4 pr-6 pb-4 pl-6 text-2xl rounded-lg border-none cursor-pointer transition-colors bg-red-700 hover:bg-red-600"
+          className="pt-1 pr-2 pb-1 pl-2 text-xl lg:pt-4 lg:pr-6 lg:pb-4 lg:pl-6 lg:text-2xl  rounded-lg border-none cursor-pointer transition-colors bg-red-700 hover:bg-red-600"
           onClick={onIncorrectAnswer}
         >
           Не помню
         </button>
 
         <button
-          className="pt-4 pr-6 pb-4 pl-6 text-2xl rounded-lg border-none cursor-pointer transition-colors bg-green-700 hover:bg-green-600"
+          className="pt-1 pr-2 pb-1 pl-2 text-xl lg:pt-4 lg:pr-6 lg:pb-4 lg:pl-6 lg:text-2xl rounded-lg border-none cursor-pointer transition-colors bg-green-700 hover:bg-green-600"
           onClick={onCorrectAnswer}
         >
           Помню

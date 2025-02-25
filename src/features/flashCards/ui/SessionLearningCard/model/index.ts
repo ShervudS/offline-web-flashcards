@@ -11,11 +11,11 @@ import { $card } from "../components/FlashCard/model";
 /**
  * Интервал для показа карточки из очереди повторения
  */
-const REPEAT_CARD_INTERVAL = 3;
+// const REPEAT_CARD_INTERVAL = 3;
 /**
  * Кол-во раз для повторения карточки из очереди повторения
  */
-const REPEAT_CARD_COUNT = 3;
+// const REPEAT_CARD_COUNT = 3;
 
 // const MSEC_FROM_SEC = 1000;
 //   const responseTimeSec = Math.floor(

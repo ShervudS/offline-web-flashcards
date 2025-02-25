@@ -2,7 +2,6 @@ import { describe, it, expect, beforeEach } from "vitest";
 import { fork, allSettled } from "effector";
 
 import {
-  displayedCard,
   showedHintOfAmountLettres,
   showedHintOfFirstLetter,
   answeredCard,

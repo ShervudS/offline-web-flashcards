@@ -8,7 +8,7 @@ export const LearningProgress = ({
   amountCards,
 }: TLearningProgress) => {
   return (
-    <div className="flex flex-col items-center gap-3 min-w-lg">
+    <div className="flex flex-col items-center gap-3 max-w-3xl w-full">
       <div className="relative w-full h-4 bg-gray-800 dark:bg-gray-400 rounded-xl">
         <div
           className="progress"
@@ -16,7 +16,7 @@ export const LearningProgress = ({
         />
       </div>
 
-      <p className="text-xl text-gray-500">{`Завершено ${currentPosotion} / ${amountCards}`}</p>
+      <p className="text-lg text-gray-500 md:text-xl">{`Завершено ${currentPosotion} / ${amountCards}`}</p>
     </div>
   );
 };
