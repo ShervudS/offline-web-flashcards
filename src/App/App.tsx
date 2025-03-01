@@ -6,7 +6,7 @@ export const App = () => (
   <>
     <Header />
 
-    <main className="flex flex-col gap-1 min-h-screen content-container bg-gray-base dark:bg-gray-50">
+    <main className="flex flex-col gap-1 min-h-screen content-container">
       <FlashCardsWrapper />
     </main>
 

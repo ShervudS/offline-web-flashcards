@@ -9,12 +9,14 @@ type TInputControl = InputHTMLAttributes<HTMLInputElement> & {
   onBlur?: () => void;
   disabled?: boolean;
   error?: string | null;
+  sizeVariant?: "sm" | "md" | "lg";
 };
 
 export const InputControl = ({
   value,
   onChange,
   type = "text",
+  sizeVariant = "md",
   label,
   validate,
   hintText,
@@ -29,8 +31,14 @@ export const InputControl = ({
     onBlurInProps && onBlurInProps();
   };
 
+  const sizeVariants = {
+    sm: "",
+    md: "pt-0.5 pr-1.5 pb-0.5 pl-1.5 lg:pt-1 lg:pr-3.5 lg:pb-1 lg:pl-3.5",
+    lg: "",
+  };
+
   return (
-    <div className="flex flex-col gap-1">
+    <div className="flex flex-col gap-0.5 lg:gap-1">
       <label
         className="text-gray-100 dark:text-gray-950 select-none"
         htmlFor={inputId}
@@ -45,7 +53,7 @@ export const InputControl = ({
         onChange={onChange}
         onBlur={onBlur}
         disabled={disabled}
-        className="block bg-gray-800 dark:bg-gray-600 pt-1 pr-3.5 pb-1 pl-3.5 rounded-md cursor-text border border-solid border-gray-100 dark:border-gray-950"
+        className={`${sizeVariants[sizeVariant]} block bg-gray-800 dark:bg-gray-600 rounded-md cursor-text border border-solid border-gray-500 dark:border-gray-800 placeholder:text-gray-100`}
         {...props}
       />
 

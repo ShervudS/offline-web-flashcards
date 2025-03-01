@@ -21,6 +21,12 @@
 
 @custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
 
+@layer base {
+  body {
+    @apply bg-gray-base dark:bg-gray-50 text-gray-100 dark:text-gray-950;
+  }
+}
+
 *,
 ::after,
 ::before,

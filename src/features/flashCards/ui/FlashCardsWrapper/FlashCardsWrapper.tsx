@@ -10,9 +10,7 @@ export const FlashCardsWrapper = () => {
       <SessionLearningCard />
 
       <div className="w-full">
-        <h2 className="text-3xl font-bold text-gray-50 dark:text-gray-900 mb-2">
-          All flashCards
-        </h2>
+        <h2 className="text-3xl font-bold mb-2">All flashCards</h2>
 
         <CardsListPreview />
       </div>

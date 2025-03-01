@@ -36,7 +36,7 @@ export const Button = ({
 
   return (
     <button
-      className={`${colorVariants[variant]} ${sizeVariants[size]} flex items-center border cursor-pointer disabled:cursor-not-allowed transition-colors duration-200 ease-out`}
+      className={`${colorVariants[variant]} ${sizeVariants[size]} flex items-center justify-center border cursor-pointer disabled:cursor-not-allowed transition-colors duration-200 ease-out`}
       {...rest}
     >
       {prefixIcon}
