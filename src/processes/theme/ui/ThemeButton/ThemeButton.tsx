@@ -1,48 +1,14 @@
-import { useEffect, useState } from "react";
+import { useUnit } from "effector-react";
 
 import { Button } from "_shared/Button";
 
-import { WINDOW_MATH_MEDIA } from "_configs/index";
-
-import type { Nullable } from "_types/index";
-
-const STORAGE_THEME_KEY = "theme";
-const THEME_DATA_ATTR = "data-theme";
-const enum THEME {
-  DARK = "dark",
-  LIGHT = "light",
-}
+import { toggedTheme } from "_processes/theme/model/theme.model";
 
 export const ThemeButton = () => {
-  const [theme, setTheme] = useState<Nullable<THEME>>(null);
-
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const savedTheme = localStorage.getItem(STORAGE_THEME_KEY) as THEME;
-      const systemPrefersDark = window.matchMedia(
-        WINDOW_MATH_MEDIA.PREFERS_COLOR_SCHEME
-      ).matches;
-
-      setTheme(savedTheme || (systemPrefersDark ? THEME.DARK : THEME.LIGHT));
-    }
-  }, []);
-
-  useEffect(() => {
-    if (theme) {
-      document.documentElement.setAttribute(THEME_DATA_ATTR, theme);
-
-      localStorage.setItem(STORAGE_THEME_KEY, theme);
-    }
-  }, [theme]);
-
-  const toggleTheme = () => {
-    setTheme((prevTheme) =>
-      prevTheme === THEME.LIGHT ? THEME.DARK : THEME.LIGHT
-    );
-  };
+  const onToggleTheme = useUnit(toggedTheme);
 
   return (
-    <Button onClick={toggleTheme} size="sm">
+    <Button onClick={onToggleTheme} size="sm">
       Theme
     </Button>
   );
