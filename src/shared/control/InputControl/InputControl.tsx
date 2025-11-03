@@ -38,7 +38,7 @@ export const InputControl = ({
   };
 
   return (
-    <div className="flex flex-col gap-0.5 lg:gap-1">
+    <div className="flex flex-col items-start gap-0.5 lg:gap-1">
       <label
         className="text-gray-100 dark:text-gray-950 select-none"
         htmlFor={inputId}

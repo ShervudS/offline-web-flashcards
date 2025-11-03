@@ -8,6 +8,7 @@ export default defineConfig({
 
   resolve: {
     alias: {
+      _pages: "/src/pages",
       _widgets: "/src/widgets",
       _features: "/src/features",
       _entities: "/src/entities",
@@ -29,9 +30,9 @@ export default defineConfig({
       },
       output: {
         hashCharacters: "base36",
-        chunkFileNames: "assets/[hash].js",
         entryFileNames: ({ name: entryName }) =>
-          entryName === "sw" ? "[name].js" : "assets/[hash].js",
+          entryName === "sw" ? "[name].js" : "[hash].js",
+        chunkFileNames: "assets/[hash].js",
         assetFileNames: "assets/[hash][extname]",
       },
     },

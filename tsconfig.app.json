@@ -24,6 +24,7 @@
 
     "baseUrl": "./",
     "paths": {
+      "_pages/*": ["src/pages/*"],
       "_widgets/*": ["src/widgets/*"],
       "_features/*": ["src/features/*"],
       "_entities/*": ["src/entities/*"],

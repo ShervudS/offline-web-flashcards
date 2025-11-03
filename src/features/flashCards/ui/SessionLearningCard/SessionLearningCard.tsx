@@ -1,6 +1,7 @@
 import { useUnit } from "effector-react";
 
 import { Button } from "_shared/Button";
+import { Typography } from "_shared/Typography";
 import { LearningProgress } from "./components/LearningProgress";
 import { FlashCard } from "./components/FlashCard";
 
@@ -40,7 +41,7 @@ export const SessionLearningCard = () => {
     <div className="w-full flex flex-col justify-center items-center gap-5">
       {!hasCardsToLearn && (
         <div>
-          <h3>Отсутстуют карточки для изучения</h3>
+          <Typography variant="h3">Отсутстуют карточки для изучения</Typography>
         </div>
       )}
 
@@ -63,9 +64,7 @@ export const SessionLearningCard = () => {
 
       {studyResultsVisible && (
         <div className="max-w-5xl w-full bg-gray-700  dark:bg-gray-400 p-8 rounded-2xl flex flex-col justify-between items-center min-h-50">
-          <p className="text-gray-100 dark:text-gray-800">
-            Всего изучено карточек: {amountCardToLearn}
-          </p>
+          <Typography>{`Всего изучено карточек: ${amountCardToLearn}`}</Typography>
 
           <Button onClick={onRetrySession}>Начать заного</Button>
         </div>

@@ -1,8 +1,8 @@
 const version = "v0.2.2";
 
-const enum METHOD {
-	GET = "GET",
-}
+const METHOD = {
+	GET: "GET",
+} as const;
 
 const staticAssetRegex = /\.(js|css)$/;
 const imageRegex = /\.(jpe?g|png|gif|svg|webp|avif)$/i;

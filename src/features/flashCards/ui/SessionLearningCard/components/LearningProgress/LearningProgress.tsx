@@ -1,3 +1,5 @@
+import { Typography } from "_shared/Typography";
+
 type TLearningProgress = {
   currentPosotion: number;
   amountCards: number;
@@ -16,7 +18,9 @@ export const LearningProgress = ({
         />
       </div>
 
-      <p className="text-lg text-gray-500 md:text-xl">{`Завершено ${currentPosotion} / ${amountCards}`}</p>
+      <Typography className="text-lg">
+        {`Завершено ${currentPosotion} / ${amountCards}`}
+      </Typography>
     </div>
   );
 };

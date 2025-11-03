@@ -3,6 +3,7 @@ import { defineConfig } from "vitest/config";
 export default defineConfig({
   resolve: {
     alias: {
+      _pages: "/src/pages",
       _widgets: "/src/widgets",
       _features: "/src/features",
       _entities: "/src/entities",

@@ -1,19 +1,27 @@
-import { FormEventHandler } from "react";
+import { FormEventHandler, useMemo } from "react";
 import { useUnit } from "effector-react";
 
 import { InputControl } from "_shared/control/InputControl";
+import { TextAreaControl } from "_shared/control/TextAreaControl";
 import { Button } from "_shared/Button";
+import { MultiselectControl } from "_shared/control/MultiselectControl";
+import { Typography } from "_shared/Typography";
 
 import {
   $answer,
   $answerError,
-  $formDisabled,
+  answerChanged,
   $question,
   $questionError,
-  answerChanged,
-  formSubmitted,
   questionChanged,
+  $note,
+  noteChanged,
+  $formDisabled,
+  formSubmitted,
+  $tags,
+  tagsChanged,
 } from "./model";
+import { $tagsCollection } from "_entities/tags/model/tags.model";
 
 const QuestionField = () => {
   const [question, questionError, changeQuestion, formDisabled] = useUnit([
@@ -59,6 +67,56 @@ const AnswerField = () => {
   );
 };
 
+const NoteField = () => {
+  const [note, changeNote, formDisabled] = useUnit([
+    $note,
+    noteChanged,
+    $formDisabled,
+  ]);
+
+  return (
+    <TextAreaControl
+      value={note}
+      onChange={(e) => changeNote(e.target.value)}
+      disabled={formDisabled}
+      name="note"
+      label="Note"
+      placeholder="Write note for you translane"
+      className="col-span-3"
+    />
+  );
+};
+
+const TagsField = () => {
+  const [tagsCollection, tags, changeTags, formDisabled] = useUnit([
+    $tagsCollection,
+    $tags,
+    tagsChanged,
+    $formDisabled,
+  ]);
+
+  const options = useMemo(
+    () =>
+      tagsCollection.map((tag) => ({
+        id: tag.id,
+        name: tag.name,
+        value: tag.id,
+      })),
+    [tagsCollection]
+  );
+
+  return (
+    <MultiselectControl
+      options={options}
+      value={tags}
+      onChange={(e) => changeTags([e.target.value])}
+      disabled={formDisabled}
+      name="tags"
+      label="Tags"
+    />
+  );
+};
+
 export const FlashCardForm = () => {
   const [formDisabled, onSubmit] = useUnit([$formDisabled, formSubmitted]);
 
@@ -70,15 +128,19 @@ export const FlashCardForm = () => {
   return (
     <form
       onSubmit={onFormSubmit}
-      className="flex flex-col flex-wrap gap-2 pt-2 pb-2 sm:flex-row sm:items-center md:gap-4 md:pb-4 md:pt-4 lg:gap-6 lg:pb-8 lg:pt-8"
+      className="grid grid-cols-3 gap-2 p-2 bg-gray-900 dark:bg-gray-400 rounded-2xl text-center"
     >
-      <h3 className="text-3xl font-bold text-gray-50 dark:text-gray-900">
+      <Typography variant="h3" className="col-span-3 text-left font-bold">
         Create new flashcard
-      </h3>
+      </Typography>
 
       <QuestionField />
 
       <AnswerField />
+
+      <TagsField />
+
+      <NoteField />
 
       <Button type="submit" isLoading={formDisabled}>
         Save

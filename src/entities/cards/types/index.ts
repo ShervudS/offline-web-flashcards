@@ -2,9 +2,13 @@ export type TFlashCard = {
   /**
    * Уникальный идентификатор
    */
-  id: number;
+  id: string;
   question: string;
   answer: string;
+  /**
+   * Заметка для перевода
+   */
+  note?: string;
   /**
    * Дата создания
    */
@@ -25,9 +29,16 @@ export type TFlashCard = {
    * Количество повторений
    */
   repetition: number;
+  /**
+   * Пользовательские теги
+   */
+  tags: string[];
 };
 
-export type TCreateFlashCard = Pick<TFlashCard, "question" | "answer">;
+export type TCreateFlashCard = Pick<
+  TFlashCard,
+  "question" | "answer" | "note" | "tags"
+>;
 export type TUpdateFlashCard = TFlashCard;
 export type TRemoveFlashCard = Pick<TFlashCard, "id">;
 

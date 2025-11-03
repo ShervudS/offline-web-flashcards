@@ -1,0 +1,12 @@
+---
+alwaysApply: true
+---
+Always response in russian
+Always write comments in english
+Don't write self-obvious comments like "/* get audio buffer size */ let audioBufferSize = ..."
+Never use interface, always use type
+Dont use `.watch` in effector for side effects, prefer effects
+Never make `fn` in sample and createAction async - its pure function. Calling effects via target in createAction is ok, calling events or effects in sample is strictly forbidden, pass unit to target instead
+Dont create file like `store.ts` for effector models
+Never use `.use`, always create effect handlers explicitly: `createEffect(async (foo: string) => {})`
+Never use `useStore`, use only `useUnit`, pass all stores in array in first `useUnit` call and all events and effects in second `useUnit` cal

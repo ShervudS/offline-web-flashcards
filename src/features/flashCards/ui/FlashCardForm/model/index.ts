@@ -1,6 +1,6 @@
 import { combine, createEvent, createStore, sample } from "effector";
 
-import { saveDataCardFx } from "_entities/cards/model";
+import { saveCardFx } from "_entities/cards/model";
 
 import { buildBaseCardConfig } from "_features/flashCards/utils/updateCard";
 import { isEmpty } from "_utils/strChecks";
@@ -16,12 +16,16 @@ export type TErrorField = (typeof ERROR_FIELD)[keyof typeof ERROR_FIELD];
 
 export const questionChanged = createEvent<string>();
 export const answerChanged = createEvent<string>();
+export const noteChanged = createEvent<string>();
+export const tagsChanged = createEvent<string[]>();
 export const formSubmitted = createEvent();
 
 export const $question = createStore("");
 export const $questionError = createStore<Nullable<TErrorField>>(null);
 export const $answer = createStore("");
 export const $answerError = createStore<Nullable<TErrorField>>(null);
+export const $note = createStore("");
+export const $tags = createStore<string[]>([]);
 
 export const $formDisabled = createStore(false);
 export const $error = createStore<Nullable<any>>(null);
@@ -34,6 +38,8 @@ export const $formValid = combine(
 
 $question.on(questionChanged, (_, question) => question);
 $answer.on(answerChanged, (_, answer) => answer);
+$note.on(noteChanged, (_, note) => note);
+$tags.on(tagsChanged, (_, tags) => tags);
 
 sample({
   clock: formSubmitted,
@@ -59,12 +65,12 @@ sample({
 
 sample({
   clock: formSubmitted,
-  source: { question: $question, answer: $answer },
-  filter: saveDataCardFx.pending.map((pending) => !pending),
+  source: { question: $question, answer: $answer, note: $note, tags: $tags },
+  filter: saveCardFx.pending.map((pending) => !pending),
   fn: buildBaseCardConfig,
-  target: saveDataCardFx,
+  target: saveCardFx,
 });
 
-$answer.reset(saveDataCardFx.done);
-$question.reset(saveDataCardFx.done);
-$error.on(saveDataCardFx.failData, (_, error) => error);
+$answer.reset(saveCardFx.done);
+$question.reset(saveCardFx.done);
+$error.on(saveCardFx.failData, (_, error) => error);

@@ -1,6 +1,8 @@
 import { useUnit } from "effector-react";
 
-import {correctedAnswer, incorrectedAnswer} from "../../model";
+import { Typography } from "_shared/Typography";
+
+import { correctedAnswer, incorrectedAnswer } from "../../model";
 import {
   $card,
   $isVisibleAmountLetters,
@@ -60,7 +62,7 @@ export const FlashCard = () => {
   return (
     <div className="flex flex-col gap-2 max-w-5xl w-full bg-gray-800 dark:bg-gray-400 p-4 rounded-2xl text-center lg:p-8 lg:gap-8">
       <div className="text-3xl font-bold mb-6 text-gray-100 dark:text-gray-900 first-letter:uppercase">
-        <h2>{card?.question}</h2>
+        <Typography variant="h3">{card?.question}</Typography>
       </div>
 
       <div className="tracking-widest">

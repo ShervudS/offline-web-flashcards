@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 @theme {
-  --color-gray-50: #000000;
+  --color-gray-50: #010101;
   --color-gray-100: #0a0a0a;
   --color-gray-200: #171717;
   --color-gray-300: #262626;
@@ -12,7 +12,7 @@
   --color-gray-800: #d4d4d4;
   --color-gray-900: #e5e5e5;
   --color-gray-950: #f5f5f5;
-  --color-gray-base: #f1f1f1;
+  --color-gray-base: #dad9d9;
 
   --color-red-500: oklch(0.53 0.22 30); /* #d32f2f */
   --color-green-500: oklch(0.58 0.18 140); /* #388e3c */

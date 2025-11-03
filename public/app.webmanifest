@@ -2,7 +2,7 @@
 	"name": "Offline web flashcards",
 	"short_name": "Flashcards",
 	"start_url": "/",
-	"display": "fullscreen",
+	"display": "standalone",
 	"background_color": "#ffffff",
 	"theme_color": "#1e1e1e",
 	"description": "This is a PWA app with support ofline work, cache api and indexDB api",
